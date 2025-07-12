@@ -1,0 +1,157 @@
+
+# GitHub MCP Server Integration Guide
+
+## Available GitHub MCP Tools
+
+The project has access to the official GitHub MCP Server with comprehensive repository management capabilities:
+
+### Pull Request Management
+- Get PR details including status, reviewers, and metadata
+- Retrieve all reviews including CodeRabbit automated feedback
+- Access PR comments and discussion threads
+- View code changes and modified files
+- Create new pull requests with proper documentation
+- Merge approved PRs following workflow standards
+
+### CodeRabbit Review Integration
+**Primary Use Case**: Reading and analyzing CodeRabbit automated reviews
+
+#### Workflow for Analyzing CodeRabbit Feedback
+1. List open pull requests to identify those needing review
+2. Retrieve all reviews to find CodeRabbit automated feedback
+3. Extract actionable insights from review comments
+4. Prioritize issues by severity and impact
+
+### Issue & Project Management
+- Find bugs and feature requests with filtering
+- Get detailed issue information and discussion
+- Update issue status and metadata
+- Search across issues using GitHub's query syntax
+- Track project milestones and progress
+
+### Workflow & CI/CD Monitoring
+- Access repository workflow configurations
+- Monitor workflow runs and execution status
+- Debug failed builds with detailed logs
+- Retry failed CI jobs when appropriate
+- Track deployment status and rollbacks
+
+## CodeRabbit Review Analysis Workflow
+
+### Step 1: Identify Open PRs with Reviews
+- List open pull requests that may have CodeRabbit reviews
+- Filter by status, labels, or other criteria
+- Prioritize based on urgency or importance
+
+### Step 2: Analyze CodeRabbit Feedback
+- Retrieve all reviews including automated ones
+- Identify CodeRabbit-generated content by user and patterns
+- Extract structured feedback from review comments
+- Categorize issues by type and severity
+
+### Step 3: Extract Actionable Insights
+CodeRabbit typically provides feedback on:
+- **Security vulnerabilities** in dependencies or code patterns
+- **Code quality issues** like complexity and maintainability
+- **Performance optimizations** for database queries and API calls
+- **Best practices** for Python/TypeScript/React code
+- **Documentation gaps** including missing docstrings or type hints
+
+### Step 4: Address Review Comments
+- Get specific line-by-line comments for detailed analysis
+- Filter comments by type and importance
+- Create action items for addressing feedback
+- Track resolution progress and completion
+
+## Repository Context for MCP Tools
+- **Primary Repository**: uruguay-news
+- **Main Branch**: main
+- **Key Directories**: backend/, frontend/, docs/, .github/
+- **Development Patterns**: Feature branches, PR-based workflow
+
+## Common MCP Usage Patterns
+
+### Daily Development Workflow
+1. **Check Notifications**: Monitor repository activity and updates
+2. **Review PRs**: Analyze CodeRabbit feedback for quality improvements
+3. **Monitor CI**: Check workflow status and investigate failures
+4. **Update Issues**: Track progress on feature development and bugs
+
+### Release Preparation
+1. **List Open Issues**: Ensure no critical bugs remain unresolved
+2. **Check PR Status**: Verify all features are properly merged
+3. **Review Workflows**: Confirm CI/CD pipelines are functioning
+4. **Create Release**: Use GitHub tools for tagging and releasing
+
+### Code Quality Monitoring
+1. **Security Alerts**: Monitor for security vulnerabilities and dependencies
+2. **Code Scanning**: Review static analysis results and recommendations
+3. **PR Quality**: Regular analysis of CodeRabbit review patterns
+4. **Dependency Updates**: Track and apply automated dependency updates
+
+## Integration with Development Workflow
+
+### Pre-Commit Integration
+Before committing code:
+- Check for similar existing issues to avoid duplication
+- Verify CI workflows will pass based on current status
+- Review recent PR feedback patterns for common issues
+- Ensure proper branch naming and commit message conventions
+
+### Post-Commit Integration
+After pushing code:
+- Monitor workflow status for immediate feedback
+- Check for new security alerts or dependency issues
+- Review CodeRabbit feedback on new pull requests
+- Update related issues with progress and status
+
+## Best Practices for MCP Usage
+
+### Efficient API Usage
+- **Batch Operations**: Use pagination and filtering to reduce API calls
+- **Targeted Queries**: Use specific filters for issues, PRs, and workflows
+- **Cache Results**: Store frequently accessed data locally when appropriate
+- **Rate Limiting**: Respect GitHub API rate limits and implement backoff
+
+### CodeRabbit Review Prioritization
+1. **Security Issues**: Address immediately (vulnerabilities, secrets exposure)
+2. **Critical Quality**: Fix major code quality problems affecting maintainability
+3. **Performance**: Optimize slow database queries and API calls
+4. **Documentation**: Add missing docstrings and comprehensive type hints
+5. **Style/Minor**: Address when time permits and in batch updates
+
+### Notification Management
+- **Stay Updated**: Regular monitoring of repository notifications
+- **Filter Relevant**: Focus on repository-specific and role-relevant notifications
+- **Mark Read**: Maintain clean notification state for efficiency
+- **Priority Handling**: Establish workflows for urgent vs. routine notifications
+
+## Quality Assurance Integration
+
+### Code Review Enhancement
+- Use MCP tools to enhance human code review process
+- Automate collection of review metrics and patterns
+- Track review completion rates and feedback quality
+- Identify areas for process improvement
+
+### CI/CD Optimization
+- Monitor build performance and failure patterns
+- Track deployment success rates and rollback frequency
+- Identify bottlenecks in automated testing
+- Optimize workflow efficiency based on data
+
+## Collaboration Features
+
+### Team Communication
+- Facilitate asynchronous code review discussions
+- Track contributor engagement and participation
+- Monitor issue resolution times and patterns
+- Support remote collaboration through structured feedback
+
+### Project Management
+- Track milestone progress and completion rates
+- Monitor feature development lifecycle
+- Coordinate release planning and preparation
+- Maintain project health metrics and reporting
+
+This GitHub MCP integration enables efficient repository management and ensures high code quality through automated CodeRabbit reviews and comprehensive CI/CD monitoring.

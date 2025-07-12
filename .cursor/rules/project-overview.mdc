@@ -1,0 +1,140 @@
+
+# Uruguay News Analysis System - Project Overview
+
+## Project Mission
+This is an **open-source AI-powered news analysis platform** for Uruguay, designed to transform how Uruguayan citizens engage with political and social discourse through intelligent media monitoring and bias detection. The project is **community-driven** and developed with AI assistance.
+
+## Revolutionary AI-Enhanced Development
+This project leverages **cutting-edge AI development tools and MCP (Model Context Protocol)** servers:
+
+- **MCP Integration**: Early adoption of standardized AI tool integration
+- **LangBiTe Bias Detection**: Open-source bias detection with 300+ prompts
+- **Transformer Models**: 84%+ accuracy sentiment analysis for Spanish language
+- **Real-time AI Monitoring**: Advanced threat detection and monitoring systems
+
+## Core Architecture & Entry Points
+- **Backend**: FastAPI application deployed on Google Cloud Functions
+- **Frontend**: React dashboard deployed on GitHub Pages
+- **Mobile**: React Native mobile application
+- **Configuration**: Python project with UV package manager
+- **Infrastructure**: Serverless Google Cloud architecture
+
+## Technology Stack Overview
+- **Backend**: FastAPI + LangChain/LangGraph + UV package manager
+- **Database**: Google Firestore (NoSQL) + Memorystore Redis (caching)
+- **AI/ML**: MCP servers for tool integration + OpenAI (migrating to Gemini)
+- **Deployment**: Serverless Cloud Functions + GitHub Pages
+- **Development**: Ruff linting, mypy, pre-commit hooks
+- **Infrastructure**: Google Cloud services with free tier optimization
+
+## Essential MCP Servers
+### Core Infrastructure
+- Filesystem operations for local file management
+- Web content fetching for news scraping
+- Repository management for development workflow
+- Document database operations for data storage
+- Knowledge graph memory for context retention
+
+### Google Cloud Integration
+- Custom Firestore server for document operations
+- Redis server for Memorystore integration
+- Cloud Storage server for file management
+- BigQuery server for analytics and warehousing
+- Cloud Functions server for deployment management
+
+## Advanced AI Analysis Capabilities
+### Sentiment Analysis (84%+ Accuracy)
+- Spanish-optimized transformer models
+- Multi-level analysis (sentence and document)
+- Cultural context for Uruguayan Spanish
+- Emotion recognition alongside sentiment
+
+### Bias Detection (LangBiTe Integration)
+- Comprehensive bias detection across political spectrum
+- 300+ prompts for thorough analysis
+- Uruguayan political context awareness
+- Automated fact-checking capabilities
+
+### Real-time Processing
+- AI-powered monitoring for misinformation
+- Social media analysis integration
+- Breaking news priority processing
+- Sub-200ms response times with caching
+
+## Target News Sources
+Primary focus on Uruguayan media outlets including traditional newspapers, digital platforms, and social media monitoring for comprehensive coverage.
+
+## AI-Powered Features
+### Multi-Agent Analysis Pipeline
+1. **Content Extraction**: Clean article parsing
+2. **Sentiment Analysis**: Emotion and sentiment detection
+3. **Bias Detection**: Political and social bias analysis
+4. **Entity Recognition**: People, organizations, locations
+5. **Fact-Checking**: Claim verification
+6. **Memory Management**: Context persistence
+
+### Advanced Processing
+- **Semantic Search**: Vector embeddings for similarity
+- **Duplicate Detection**: Content deduplication
+- **Source Tracking**: Historical pattern analysis
+- **Real-time Alerts**: Urgent news notifications
+- **API Integration**: Comprehensive API access
+
+## Development Philosophy
+- **Open Source First**: Community-driven development
+- **AI-Assisted**: Leveraging modern AI development tools
+- **Google Cloud Native**: Serverless-first architecture
+- **Modern Stack**: Latest tools and frameworks
+- **Democratic Impact**: Media literacy focus
+- **Milestone-Based**: Flexible development timeline
+
+## Performance & Scalability Goals
+- **10x Performance**: Through serverless architecture
+- **30% Accuracy Improvement**: Via advanced AI models
+- **60% Cost Reduction**: Through free tier optimization
+- **99.9% Reliability**: Enterprise-grade infrastructure
+- **Sub-200ms Response**: Global CDN and caching
+
+## Implementation Phases
+### Phase 1: Foundation
+- Google Cloud infrastructure setup
+- Spanish sentiment analysis implementation
+- Bias detection methodology
+- Basic web dashboard
+
+### Phase 2: Enhancement
+- Advanced MCP server integration
+- Real-time social media monitoring
+- Mobile application development
+- Performance optimization
+- Community features
+
+## Quality Assurance
+- **AI Model Testing**: Accuracy validation
+- **Cloud Integration**: Comprehensive testing
+- **Performance Benchmarks**: Response time monitoring
+- **End-to-End Testing**: Full pipeline validation
+
+## Community & Collaboration
+- **GitHub Integration**: Full repository management
+- **Automated Reviews**: Code quality analysis
+- **Contributor Support**: Clear onboarding process
+- **Documentation**: Comprehensive guides
+- **Issue Tracking**: Organized bug reports and features
+
+## Cost-Effective Strategy
+- **Firestore**: Generous free tier for document storage
+- **Cloud Functions**: Serverless execution model
+- **BigQuery**: Free analytics tier
+- **GitHub Pages**: Free static hosting
+- **Memorystore**: Scalable caching solution
+
+## Impact & Innovation
+This project represents a **paradigm shift** in news analysis through:
+- **Serverless Architecture**: First-of-its-kind implementation
+- **Advanced Bias Detection**: State-of-the-art methodology
+- **High-Accuracy Analysis**: 84%+ Spanish sentiment accuracy
+- **Open-Source Approach**: Democratizing AI tools
+- **Democratic Focus**: Media literacy and informed citizenship
+
+The system serves as a **reference implementation** for serverless AI-powered news analysis, demonstrating how modern cloud tools and AI can create advanced media understanding capabilities.

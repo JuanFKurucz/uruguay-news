@@ -1,0 +1,122 @@
+
+# AI Analysis Patterns & LangChain Integration
+
+## Multi-Agent Analysis Architecture
+Design LangChain/LangGraph workflows using Google Cloud services for scalable, serverless news analysis with 84%+ accuracy for Spanish sentiment analysis.
+
+## Core Analysis Agents
+
+### 1. Content Extraction Agent
+- Use Cloud Functions with @functions_framework.http decorators
+- Integrate MCP fetch servers for content retrieval
+- Store extracted content in Firestore with automatic indexing
+- Include metadata: source URL, extraction timestamp, content hash
+
+### 2. Spanish Sentiment Analysis Agent
+- Target 84%+ accuracy for Spanish sentiment analysis
+- Use transformer models optimized for Spanish language
+- Handle Uruguayan Spanish context and cultural idioms
+- Implement Redis caching for model results (Memorystore)
+- Include emotion detection alongside sentiment scoring
+
+### 3. LangBiTe Bias Detection Agent
+- Implement 300+ prompts for comprehensive bias detection
+- Focus on Uruguayan political spectrum analysis
+- Store detailed analysis in Firestore with BigQuery integration
+- Include political lean, bias scores, and confidence levels
+
+### 4. Entity Recognition Agent
+- Extract people, organizations, and locations from Spanish text
+- Combine SpaCy with Google Cloud Natural Language API
+- Filter results for Uruguayan context relevance
+- Store geographical and political entity mappings
+
+### 5. Fact-Checking Agent
+- Verify claims against trusted Uruguayan news sources
+- Implement claim extraction and verification scoring
+- Cross-reference with established fact-checking databases
+- Provide supporting source links and confidence metrics
+
+### 6. Memory & Context Agent
+- Use Firestore for persistent context storage
+- Implement vector embeddings for semantic memory
+- Track conversation history and analysis patterns
+- Enable context-aware analysis across sessions
+
+## LangChain/LangGraph Patterns
+
+### Agent Communication
+- Design clear input/output contracts between agents
+- Use structured data formats (Pydantic models)
+- Implement error handling and fallback mechanisms
+- Enable parallel processing where possible
+
+### Workflow Orchestration
+- Use LangGraph for complex multi-step analysis workflows
+- Implement conditional routing based on content type
+- Design retry logic for failed analysis steps
+- Track processing metrics for performance optimization
+
+### Memory Management
+- Implement conversation memory for context retention
+- Use vector stores for semantic similarity search
+- Design memory cleanup and archiving strategies
+- Balance memory usage with analysis quality
+
+## Performance Guidelines
+
+### Response Time Targets
+- API endpoints: <200ms response time
+- Analysis pipelines: <5 seconds for complete analysis
+- Real-time monitoring: <1 second for priority content
+- Batch processing: Optimize for throughput over latency
+
+### Accuracy Requirements
+- Spanish sentiment analysis: 84%+ accuracy
+- Bias detection: High precision with clear confidence scores
+- Entity extraction: Focus on precision over recall
+- Fact-checking: Conservative scoring with verified sources
+
+### Scalability Patterns
+- Use serverless architecture for auto-scaling
+- Implement intelligent caching strategies
+- Design stateless agents for horizontal scaling
+- Monitor resource usage and optimize costs
+
+## Error Handling & Monitoring
+
+### Graceful Degradation
+- Provide fallback responses when AI services fail
+- Use cached results when real-time analysis unavailable
+- Implement circuit breakers for external dependencies
+- Log errors with sufficient context for debugging
+
+### Quality Assurance
+- Validate input data before processing
+- Monitor model accuracy with test datasets
+- Track processing success rates and failure patterns
+- Implement automated quality checks
+
+## Integration Guidelines
+
+### Google Cloud Services
+- Use Cloud Functions for serverless agent deployment
+- Store results in Firestore with proper indexing
+- Leverage Memorystore Redis for caching
+- Monitor performance with Cloud Monitoring
+
+### MCP Server Integration
+- Use MCP servers for external tool interactions
+- Implement proper authentication and rate limiting
+- Handle MCP server failures gracefully
+- Monitor MCP server health and performance
+
+### External APIs
+- Implement proper authentication for AI model APIs
+- Use connection pooling for database connections
+- Handle rate limiting from external services
+- Cache expensive API calls appropriately
+
+## Future Enhancements
+- **Real-time Monitoring**: Add social media monitoring capabilities
+- **Performance Optimization**: Implement caching and batch processing

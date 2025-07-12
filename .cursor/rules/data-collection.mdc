@@ -1,0 +1,145 @@
+
+# Data Collection & Web Scraping Guidelines
+
+## Primary Uruguayan News Sources
+Configure scrapers for these key sources with specific patterns:
+
+### Traditional Media
+- **El País** (elpais.com.uy) - Center-right, 50-80 articles/day
+- **Montevideo Portal** (montevideo.com.uy) - Neutral, 100-150 articles/day  
+- **Teledoce** (teledoce.com) - Center, 40-60 articles/day + video
+- **La Diaria** (ladiaria.com.uy) - Progressive, 20-35 articles/day
+- **Brecha** (brecha.com.uy) - Left-wing weekly, investigative focus
+
+### Social Media
+- **Twitter/X**: Monitor key political figures, journalists, hashtags (#Uruguay, #Política)
+- **Facebook**: Public pages of news organizations and political figures
+- **Reddit**: r/uruguay subreddit discussions and sentiment
+
+## Ethical Scraping Practices
+### Rate Limiting & Respect
+- Always check robots.txt and respect rate limits
+- Use appropriate delays between requests (2+ seconds)
+- Include descriptive user-agent strings
+- Implement retry logic with exponential backoff
+- Set reasonable timeout values for requests
+
+### Data Collection Standards
+- Only collect publicly available content
+- Respect website terms of service
+- Implement polite scraping patterns
+- Use appropriate request headers
+- Handle errors gracefully
+
+## Content Deduplication Strategy
+- **Hash-based**: Use content hashes to detect identical articles
+- **Semantic Similarity**: Use vector embeddings to find near-duplicates
+- **Title Matching**: Fuzzy matching for similar headlines across sources
+- **Publication Time**: Consider temporal clustering of similar stories
+
+## Data Quality & Validation
+### Content Quality Scoring
+- Length indicators for substantial content
+- Structure validation (title, content, source present)
+- Language detection for Spanish text
+- Metadata completeness assessment
+- Source credibility scoring
+
+### Validation Criteria
+- Minimum content length requirements
+- Required metadata fields
+- Spanish language confirmation
+- Source authenticity verification
+- Publication date validation
+
+## Real-time Data Pipeline
+1. **RSS Feeds**: Monitor for real-time updates
+2. **Social Media APIs**: Stream Twitter/Facebook posts
+3. **Webhook Receivers**: Accept push notifications from sources
+4. **Change Detection**: Monitor website changes for breaking news
+
+## Storage & Indexing Strategy
+### Document Structure
+- Unique identifiers for each article
+- Complete metadata (title, content, source, URL, timestamps)
+- Analysis results storage (sentiment, bias, entities)
+- Quality scoring and content hashes
+- Vector embeddings for semantic search
+
+### Database Design
+- Use Firestore collections for scalable document storage
+- Implement proper indexing for query performance
+- Design for real-time updates and analytics
+- Include geographical and temporal indexing
+
+## Error Handling & Monitoring
+- **Failed Scrapes**: Log errors with context and implement retry logic
+- **Content Changes**: Monitor for layout changes that break scrapers
+- **Rate Limiting**: Handle 429 responses gracefully with backoff
+- **Proxy Management**: Use proxy pools for high-volume scraping if needed
+- **Health Checks**: Regular monitoring of scraper success rates
+
+## Performance Optimization
+### Caching Strategies
+- Cache processed content to avoid re-scraping
+- Use Redis for temporary storage of scraping results
+- Implement intelligent cache invalidation
+- Cache robot.txt and sitemap information
+
+### Parallel Processing
+- Design concurrent scraping with rate limit respect
+- Use async/await patterns for I/O operations
+- Implement work queues for large-scale scraping
+- Balance parallelism with politeness
+
+## Content Processing Pipeline
+### Extraction Standards
+- Clean HTML and extract plain text content
+- Preserve important formatting and structure
+- Extract metadata (author, publication date, tags)
+- Identify and extract multimedia content
+- Handle multiple content formats (text, video, audio)
+
+### Text Normalization
+- Standardize character encoding (UTF-8)
+- Remove unnecessary whitespace and formatting
+- Handle special characters and accents
+- Normalize quotation marks and punctuation
+- Preserve paragraph structure
+
+## Legal & Compliance
+- **Fair Use**: Only extract necessary content for analysis
+- **Copyright Respect**: Link back to original sources
+- **Privacy**: Don't collect personal user data from comments
+- **Terms of Service**: Respect website ToS and robots.txt
+- **Attribution**: Always credit original sources in the dashboard
+
+## Source Reliability Assessment
+### Credibility Factors
+- Editorial standards and fact-checking processes
+- Publication history and reputation
+- Source transparency and authorship
+- Correction and retraction policies
+- Political bias and funding transparency
+
+### Quality Metrics
+- Content accuracy and factual verification
+- Source citation and reference quality
+- Editorial independence assessment
+- Community trust and engagement metrics
+- Professional journalism standards adherence
+
+## Regional Context Considerations
+### Uruguayan Media Landscape
+- Understanding local political dynamics
+- Recognition of media ownership patterns
+- Awareness of historical bias patterns
+- Cultural context in content interpretation
+- Regional language variations and idioms
+
+### Political Spectrum Mapping
+- Map sources to political spectrum positions
+- Track editorial stance changes over time
+- Monitor election period coverage patterns
+- Analyze partisan content distribution
+- Assess coverage balance across topics

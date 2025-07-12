@@ -1,0 +1,144 @@
+# MCP Integration Guidelines
+
+## What is MCP and Why It's Revolutionary
+
+Model Context Protocol (MCP) is an open standard developed by Anthropic in late 2024 that **fundamentally changes AI development**. Instead of custom integrations for every external tool, MCP provides a standardized way for AI models to connect with databases, APIs, file systems, and other services.
+
+**Key Benefits**:
+- **75% of companies** planning MCP adoption by 2026
+- **10-100x faster** development compared to custom integrations
+- **Standardized interfaces** reduce maintenance overhead
+- **Plug-and-play** architecture for AI tools
+
+## Essential MCP Servers for News Analysis
+
+### Core Infrastructure Servers
+- **Filesystem**: Secure local file operations with project scope
+- **Fetch**: HTTP requests for web content and API calls
+- **GitHub**: Repository management, issues, and code review
+- **Memory**: Persistent AI memory across sessions
+- **Database**: Connection to data storage systems
+
+### News-Specific MCP Servers
+- **Web Scraping**: Advanced content extraction with JavaScript support
+- **Search**: Privacy-focused and semantic search capabilities
+- **Caching**: Real-time data management and performance optimization
+- **Browser Automation**: Complex site navigation and content extraction
+
+## MCP Integration Architecture
+
+### Production Configuration Principles
+- **Security First**: Use environment variables for sensitive data
+- **Container Isolation**: Prefer containerized MCP servers
+- **Resource Management**: Monitor and limit resource usage
+- **Fallback Handling**: Design graceful degradation when servers fail
+- **Health Monitoring**: Track server availability and performance
+
+### MCP Server Usage Patterns
+- **Repository Management**: GitHub operations for code review and issues
+- **Content Research**: Web search and content fetching for analysis
+- **Data Operations**: Database queries and file system access
+- **Memory Management**: Persistent context and conversation history
+- **Automation**: Browser automation for complex news site scraping
+
+## Integration Guidelines
+
+### Google Cloud Services
+- **Cloud Functions**: Deploy MCP-aware functions for serverless scaling
+- **Firestore**: Store MCP server responses and analysis results
+- **Memorystore Redis**: Cache MCP server data for performance
+- **Secret Manager**: Secure storage of MCP server credentials
+
+### Error Handling & Monitoring
+- **Circuit Breakers**: Prevent cascading failures from MCP server issues
+- **Retry Logic**: Implement exponential backoff for failed requests
+- **Logging**: Comprehensive logging of MCP server interactions
+- **Alerting**: Monitor MCP server health and response times
+
+## News Scraping with MCP
+
+### Content Extraction Patterns
+- **Standard Content**: Use basic fetch MCP for simple HTML sites
+- **JavaScript Sites**: Use browser automation MCP for dynamic content
+- **API Integration**: Use fetch MCP for structured data APIs
+- **Fallback Strategy**: Multiple extraction methods for reliability
+
+### Uruguayan News Sources Integration
+- **El País**: Standard web scraping approach
+- **Montevideo Portal**: API-first when available
+- **Teledoce**: JavaScript rendering required
+- **La Diaria**: Simple RSS/HTML extraction
+- **Brecha**: Weekly publication pattern handling
+
+## Performance Guidelines
+
+### Response Time Optimization
+- **Caching Strategy**: Cache MCP server responses intelligently
+- **Parallel Processing**: Use multiple MCP servers concurrently
+- **Connection Pooling**: Reuse connections where possible
+- **Resource Limits**: Set appropriate timeouts and limits
+
+### Scalability Considerations
+- **Server Distribution**: Distribute load across multiple MCP instances
+- **Rate Limiting**: Respect external service limits
+- **Resource Monitoring**: Track CPU, memory, and network usage
+- **Auto-scaling**: Design for dynamic scaling based on demand
+
+## Security Best Practices
+
+### Authentication & Authorization
+- **API Keys**: Secure storage and rotation of credentials
+- **Access Control**: Limit MCP server permissions appropriately
+- **Network Security**: Use secure connections for all communications
+- **Audit Logging**: Track all MCP server interactions
+
+### Data Protection
+- **Input Sanitization**: Validate all data before MCP server processing
+- **Output Filtering**: Clean and validate MCP server responses
+- **Sensitive Data**: Avoid logging sensitive information
+- **Compliance**: Follow data protection regulations
+
+## Development Workflow
+
+### Local Development
+- **Emulation**: Use local instances for development testing
+- **Environment Separation**: Separate dev/staging/prod configurations
+- **Testing**: Comprehensive testing of MCP server integrations
+- **Debugging**: Rich logging and debugging capabilities
+
+### Production Deployment
+- **Container Strategy**: Use containerized deployments for consistency
+- **Health Checks**: Regular health monitoring of all MCP servers
+- **Backup Plans**: Alternative approaches when servers are unavailable
+- **Performance Monitoring**: Continuous monitoring of response times
+
+## AI Model Integration
+
+### LangChain/LangGraph Integration
+- **Tool Calling**: Use MCP servers as LangChain tools
+- **Workflow Integration**: Embed MCP calls in analysis workflows
+- **State Management**: Handle stateful interactions appropriately
+- **Error Recovery**: Graceful handling of MCP server failures
+
+### Context Management
+- **Memory Persistence**: Use memory MCP for conversation context
+- **Session Handling**: Maintain context across multiple interactions
+- **Data Correlation**: Link MCP server responses with analysis results
+- **Performance Tracking**: Monitor context usage and optimization
+
+## Quality Assurance
+
+### Testing Standards
+- **Unit Testing**: Test MCP server integrations in isolation
+- **Integration Testing**: Test end-to-end workflows with MCP servers
+- **Performance Testing**: Validate response times and throughput
+- **Error Testing**: Test failure scenarios and recovery
+
+### Monitoring & Alerting
+- **Server Health**: Monitor availability of all MCP servers
+- **Performance Metrics**: Track response times and success rates
+- **Error Tracking**: Monitor and alert on error patterns
+- **Resource Usage**: Track resource consumption and optimization
+
+alwaysApply: false
+---

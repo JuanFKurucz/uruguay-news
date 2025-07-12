@@ -1,0 +1,127 @@
+---
+alwaysApply: true
+---
+
+# Technology Stack & Architecture Guidelines
+
+## Backend Technology Preferences
+- **Framework**: FastAPI (high-performance, async, automatic docs) deployed on Google Cloud Functions
+- **Package Management**: UV (ultra-fast Python package manager, 10-100x faster than pip)
+- **Database**: Google Firestore (NoSQL document database) with local emulator for development
+- **Caching**: Google Memorystore for Redis (managed Redis service) + local Redis for development
+- **AI/ML**: LangChain/LangGraph for multi-agent workflows, OpenAI models (migrating to Gemini later)
+- **Vector DB**: Weaviate (open-source) or Google Vertex AI Vector Search for semantic search
+- **Analytics**: Google BigQuery for data analytics and time-series analysis
+- **Serverless**: Google Cloud Functions for backend API, Cloud Run for containerized services
+
+## Revolutionary MCP (Model Context Protocol) Integration
+- **MCP Standard**: Use MCP servers for seamless AI-external tool integration (75% of companies adopting by 2026)
+- **Core MCP Servers**:
+  - `@modelcontextprotocol/server-filesystem` - File operations
+  - `@modelcontextprotocol/server-fetch` - Web content fetching
+  - `@modelcontextprotocol/server-github` - Repository management
+  - `@modelcontextprotocol/server-postgresql` - Database queries (adapted for Firestore)
+  - `@modelcontextprotocol/server-memory` - Knowledge graph memory
+- **Google Cloud MCP Servers**:
+  - Custom MCP server for Firestore operations
+  - Redis MCP for Memorystore integration
+  - Cloud Storage MCP for file management
+  - BigQuery MCP for analytics queries
+
+## AI Development Acceleration Tools
+- **LangBiTe**: Open-source bias detection tool for AI models (perfect for news bias analysis)
+- **Media Bias Detector**: Real-time media bias analysis (used by Penn's Computational Social Science Lab)
+- **Sentiment Analysis**: Transformer models with 84%+ accuracy for Spanish language
+- **Langflow**: Visual AI workflow builder for complex pipelines
+- **Google Vertex AI**: ML platform for model training and deployment (future migration)
+
+## Frontend Technology Preferences  
+- **Web**: React 18 + TypeScript, Tailwind CSS, Shadcn/ui components
+- **Deployment**: GitHub Pages for static frontend hosting
+- **Mobile**: React Native with Expo for cross-platform development
+- **State Management**: Zustand or Redux Toolkit for complex state
+- **Data Visualization**: D3.js, Chart.js, or Recharts for news analytics dashboards
+- **CDN**: Google Cloud CDN for global content delivery
+
+## Google Cloud Architecture
+- **Compute**: Cloud Functions (serverless API), Cloud Run (containerized services)
+- **Storage**: Firestore (primary database), Cloud Storage (files/media)
+- **Caching**: Memorystore for Redis (managed Redis service)
+- **Analytics**: BigQuery (data warehouse), Cloud Logging (application logs)
+- **AI/ML**: Vertex AI (future), OpenAI integration (current)
+- **Networking**: Cloud Load Balancing, Cloud CDN, Cloud Armor (security)
+- **Monitoring**: Cloud Monitoring, Cloud Trace, Error Reporting
+
+## Development Environment Setup
+- **Local Development**: 
+  - Firestore Emulator for database
+  - Local Redis instance or Docker Redis
+  - Functions Framework for local Cloud Functions testing
+  - Google Cloud SDK and CLI tools
+- **Environment Management**: 
+  - Google Cloud Config for environment variables
+  - Secret Manager for sensitive data
+  - Cloud Build for CI/CD pipelines
+
+## News Analysis Specific Tools
+- **Sentiment Analysis**: Transformer models achieving 84% accuracy in emotion detection
+- **Bias Detection**: LangBiTe tool with 300+ prompts for detecting bias in 35+ languages
+- **Social Media Monitoring**: Threat Matrix-style AI monitoring (used by Wimbledon for abuse detection)
+- **Content Classification**: AI models for categorizing news as positive/negative/neutral
+- **Entity Recognition**: Advanced NLP for extracting people, organizations, locations
+
+## Cost-Effective Google Cloud Strategy
+- **Free Tier Usage**: Maximize Google Cloud free tier limits
+- **Firestore**: 1GB storage, 50,000 reads, 20,000 writes per day (free)
+- **Cloud Functions**: 2M invocations per month (free)
+- **Memorystore**: Basic tier for development, scale as needed
+- **BigQuery**: 1TB queries per month (free), 10GB storage (free)
+- **Monitoring**: Basic monitoring and logging included
+
+## Performance & Scalability
+- **Serverless Architecture**: Auto-scaling Cloud Functions and Cloud Run
+- **Caching Strategy**: Memorystore Redis for session management, API responses
+- **Database Optimization**: Firestore indexing, query optimization
+- **API Design**: RESTful with OpenAPI documentation, GraphQL for complex queries
+- **Load Balancing**: Google Cloud Load Balancing for traffic distribution
+- **CDN**: Cloud CDN for static asset delivery and global performance
+
+## Security & Privacy Framework
+- **Authentication**: Google Identity Platform, JWT tokens with refresh mechanism
+- **Authorization**: Firebase Auth with custom claims for RBAC
+- **Data Protection**: Google Cloud data encryption, GDPR compliance tools
+- **Input Validation**: Comprehensive validation using Pydantic models
+- **Rate Limiting**: Cloud Endpoints for API rate limiting and monitoring
+- **Security**: Cloud Armor for DDoS protection, Cloud Security Scanner
+
+## AI Model Management
+- **Model Versioning**: Track AI model versions and performance in Firestore
+- **A/B Testing**: Compare different AI models for sentiment analysis
+- **Bias Monitoring**: Regular bias detection using LangBiTe and similar tools
+- **Performance Tracking**: Monitor accuracy, latency, and cost metrics in BigQuery
+- **Fallback Systems**: Graceful degradation when AI services are unavailable
+
+## Deployment Strategy
+- **Frontend**: GitHub Pages for static React application
+- **Backend**: Cloud Functions for serverless API endpoints
+- **Database**: Firestore for document storage with automatic scaling
+- **Caching**: Memorystore Redis for high-performance caching
+- **CI/CD**: Google Cloud Build integrated with GitHub
+- **Monitoring**: Cloud Monitoring with custom dashboards and alerts
+
+## Migration Path to Gemini
+- **Current**: OpenAI models for initial development and testing
+- **Future**: Gradual migration to Google Gemini models
+- **Integration**: Vertex AI platform for unified ML operations
+- **Cost Optimization**: Leverage Google's competitive AI pricing
+- **Performance**: Take advantage of Google's global infrastructure
+
+## Recommendations for Uruguay News Project
+1. **Start with Firestore**: Use Firestore emulator for local development, cloud for production
+2. **Leverage Cloud Functions**: Serverless-first architecture for cost efficiency
+3. **Use GitHub Pages**: Free frontend hosting with custom domain support
+4. **Implement MCP**: Build custom MCP servers for Google Cloud services
+5. **Plan Gemini Migration**: Design AI workflows to easily switch from OpenAI to Gemini
+
+4. **Implement Real-time Analysis**: Use transformer models for live sentiment analysis
+5. **Build with UV**: Use UV package manager for 10-100x faster dependency management

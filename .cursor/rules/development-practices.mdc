@@ -1,0 +1,145 @@
+
+---
+alwaysApply: true
+---
+
+# Development Practices & Code Quality
+
+## Google Cloud Development Standards
+Follow Google Cloud best practices for serverless development with Cloud Functions, Firestore, and modern Python standards.
+
+## Code Quality & AI Enhancement
+- **Linting**: Ruff (extremely fast Python linter/formatter)
+- **Type Checking**: mypy for Python, TypeScript strict mode
+- **Pre-commit**: Automated code quality checks
+- **AI Assistance**: GitHub Copilot, Cursor AI, MCP servers for enhanced development
+- **Testing**: pytest (Python), Jest (JavaScript), with AI-generated test cases
+
+## Google Cloud Function Standards
+
+### Function Structure Guidelines
+- Use @functions_framework.http decorator for HTTP endpoints
+- Initialize Google Cloud services (Firestore, logging) within functions
+- Implement proper error handling with structured responses
+- Separate business logic from Cloud Function handlers
+- Include comprehensive validation for request data
+- Return structured JSON responses with status codes
+
+### Environment Configuration
+- Use Google Secret Manager for sensitive data
+- Store configuration in environment variables
+- Create configuration classes for organized settings
+- Implement environment-specific behavior (dev/staging/prod)
+- Use project-aware resource naming
+
+## Firestore Data Modeling
+
+### Document Structure Standards
+- Design clear document schemas with required fields
+- Use server timestamps for audit trails
+- Implement proper validation before document creation
+- Include metadata fields (created_at, updated_at, status)
+- Design for query optimization with proper indexing
+- Use sub-collections for nested data relationships
+
+### Data Access Patterns
+- Create dedicated model classes for each collection
+- Implement consistent error handling for database operations
+- Use transactions for multi-document operations
+- Design pagination for large result sets
+- Implement proper field validation and type checking
+
+## Testing Standards
+
+### AI Model Testing
+- Maintain 84%+ accuracy threshold for Spanish sentiment analysis
+- Use Firestore emulator for testing environment isolation
+- Create comprehensive test datasets for model validation
+- Test cultural context understanding for Uruguayan Spanish
+- Implement automated accuracy monitoring
+- Store test results for performance tracking
+
+### Cloud Function Testing
+- Test with Functions Framework locally
+- Mock external services and APIs
+- Validate request/response formats
+- Test error handling scenarios
+- Monitor performance and timeout behavior
+
+## Performance Guidelines
+
+### Response Time Targets
+- Cloud Functions: <200ms for API endpoints
+- Database queries: Optimize with proper indexing
+- Caching: Use Redis for frequently accessed data
+- Error handling: Fast fail for invalid requests
+
+### Scalability Considerations
+- Design stateless functions for auto-scaling
+- Implement connection pooling for external services
+- Use batch operations for bulk data processing
+- Monitor resource usage and costs
+
+## Security Best Practices
+
+### Authentication & Authorization
+- Use Google Identity Platform for authentication
+- Implement proper JWT token validation
+- Apply principle of least privilege for service accounts
+- Validate all input data comprehensively
+- Use HTTPS for all communications
+
+### Data Protection
+- Encrypt sensitive data at rest and in transit
+- Implement proper data retention policies
+- Follow GDPR compliance requirements
+- Use secure communication channels
+- Monitor access logs for suspicious activity
+
+## Development Workflow
+
+### Local Development
+- Use Firestore emulator for local testing
+- Set up local Redis instance for caching
+- Use Functions Framework for local Cloud Functions
+- Configure proper environment variables
+- Implement hot reloading for rapid development
+
+### Code Quality Automation
+- Configure pre-commit hooks for automatic linting
+- Use type hints throughout Python codebase
+- Implement automated testing in CI/CD pipeline
+- Monitor code coverage metrics
+- Use dependency scanning for security vulnerabilities
+
+## Error Handling Patterns
+
+### Structured Error Responses
+- Return consistent error response formats
+- Include error codes and descriptive messages
+- Log errors with sufficient context for debugging
+- Implement graceful degradation for service failures
+- Use appropriate HTTP status codes
+
+### Monitoring & Alerting
+- Set up Google Cloud Monitoring for function performance
+- Create custom metrics for business logic monitoring
+- Implement alerting for critical failures
+- Track error rates and response times
+- Monitor resource usage and costs
+
+## Documentation Standards
+
+### Code Documentation
+- Write comprehensive docstrings for all functions
+- Include type hints for function parameters and returns
+- Document complex business logic with inline comments
+- Maintain README files for setup and usage
+- Create API documentation for external interfaces
+
+### Architecture Documentation
+- Document system architecture and data flow
+- Maintain diagrams for complex interactions
+- Document deployment procedures and configuration
+- Keep troubleshooting guides updated
+- Document security considerations and best practices
