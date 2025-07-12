@@ -1,0 +1,62 @@
+---
+description: "GitHub workflow, PR management, CodeRabbit reviews, CI/CD, and community engagement practices"
+---
+
+# GitHub Workflow & PR Management
+
+## GitHub MCP Integration Available
+The project has access to GitHub MCP server tools for:
+- **Pull Request Management**: Create, review, and merge PRs
+- **CodeRabbit Reviews**: Read automated code review feedback
+- **Issue Management**: Track bugs, features, and discussions
+- **Workflow Monitoring**: Check CI/CD status and logs
+- **Notifications**: Stay updated on repository activity
+
+## Primary Use Case: CodeRabbit Review Analysis
+Use GitHub MCP tools primarily to:
+```
+# Read CodeRabbit reviews on PRs
+get_pull_request_reviews(owner="JuanFKurucz", repo="uruguay-news", pullNumber=X)
+get_pull_request_comments(owner="JuanFKurucz", repo="uruguay-news", pullNumber=X)
+```
+
+## PR Workflow Standards
+1. **Create Feature Branch**: `git checkout -b feature/descriptive-name`
+2. **Make Changes**: Follow development practices, run pre-commit hooks
+3. **Open PR**: Use descriptive title and detailed description
+4. **CodeRabbit Review**: Automated review will analyze code quality, security, performance
+5. **Address Feedback**: Respond to CodeRabbit suggestions and human reviewers
+6. **CI/CD Checks**: Ensure all tests pass, linting succeeds
+7. **Merge**: Squash and merge after approval
+
+**Development Pace**: AI-assisted development enables rapid iteration. Focus on milestone completion rather than time-based deadlines.
+
+## CodeRabbit Integration Benefits
+- **Automated Security Scanning**: Identifies potential vulnerabilities
+- **Code Quality Analysis**: Suggests improvements for maintainability
+- **Performance Optimization**: Highlights inefficient patterns
+- **Best Practices**: Ensures adherence to Python/TypeScript standards
+- **Documentation**: Suggests missing docstrings and comments
+
+## Repository Structure for Reviews
+```
+uruguay-news/
+├── backend/                 # Python FastAPI application
+├── frontend/               # React web and React Native mobile
+├── docs/                   # Project documentation
+├── .github/                # GitHub workflows and templates
+├── pyproject.toml         # Python dependencies and config
+└── README.md              # Project overview and quick start
+```
+
+## Issue Management
+- **Bug Reports**: Use issue templates with reproduction steps
+- **Feature Requests**: Include user stories and acceptance criteria
+- **Discussions**: Use GitHub Discussions for design decisions
+- **Labels**: Organize with consistent labeling (bug, enhancement, documentation)
+
+## Community Engagement
+- **Welcome Contributors**: Clear onboarding process and good first issues
+- **Code Review Culture**: Constructive feedback, educational comments
+- **Recognition**: Acknowledge community contributions in releases
+- **Documentation**: Keep README and docs updated for new contributors

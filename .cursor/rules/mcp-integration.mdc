@@ -1,0 +1,577 @@
+---
+description: "MCP (Model Context Protocol) server integration, setup, configuration, and usage patterns"
+---
+# MCP Integration Guide for Uruguay News Project
+
+## What is MCP and Why It's Revolutionary
+
+Model Context Protocol (MCP) is an open standard developed by Anthropic in late 2024 that **fundamentally changes AI development**. Instead of custom integrations for every external tool, MCP provides a standardized way for AI models to connect with databases, APIs, file systems, and other services.
+
+**Key Benefits**:
+- **75% of companies** planning MCP adoption by 2026
+- **10-100x faster** development compared to custom integrations
+- **Standardized interfaces** reduce maintenance overhead
+- **Plug-and-play** architecture for AI tools
+
+## Essential MCP Servers for Uruguay News
+
+### 1. Core Infrastructure Servers (Docker-Based)
+
+```bash
+# File System Operations
+docker run -i --rm -v ".:/workspace" ghcr.io/modelcontextprotocol/server-filesystem /workspace
+
+# Web Content Fetching (crucial for news scraping)
+docker run -i --rm ghcr.io/modelcontextprotocol/server-fetch
+
+# PostgreSQL Database Access
+docker run -i --rm -e DATABASE_URL ghcr.io/modelcontextprotocol/server-postgres
+
+# GitHub Repository Management
+docker run -i --rm -e GITHUB_PERSONAL_ACCESS_TOKEN ghcr.io/github/github-mcp-server
+
+# Memory/Knowledge Graph
+docker run -i --rm ghcr.io/modelcontextprotocol/server-memory
+```
+
+### 2. News-Specific MCP Servers (Docker-Based)
+
+```bash
+# Advanced Web Scraping with JavaScript Rendering
+docker run -i --rm -e BROWSERBASE_API_KEY -e BROWSERBASE_PROJECT_ID ghcr.io/browserbase/mcp-server-browserbase
+
+# Search Engine Integration
+docker run -i --rm -e EXA_API_KEY ghcr.io/exa-ai/mcp-server    # High-quality web search
+docker run -i --rm -e BRAVE_API_KEY ghcr.io/modelcontextprotocol/server-brave-search # Privacy-focused search
+
+# Redis for Real-time Caching
+docker run -i --rm -e REDIS_URL ghcr.io/redis/mcp-server-redis
+
+# Browser Automation for Complex Sites
+docker run -i --rm --cap-add=SYS_ADMIN ghcr.io/modelcontextprotocol/server-puppeteer
+```
+
+### 3. Advanced Analytics Servers
+
+```bash
+# Time-series Analytics
+uvx timeseries-mcp-server
+
+# Vector Database for Semantic Search
+uvx chroma-mcp-server
+
+# Data Visualization
+uvx quickchart-mcp-server  # Generate charts and graphs
+
+# MongoDB for Document Storage
+uvx mongodb-mcp-server
+```
+
+## MCP Integration Architecture
+
+The Uruguay News project uses a comprehensive MCP setup with 11 specialized servers configured in `.cursor/mcp.json`:
+
+### **Production MCP Configuration**
+
+- **GitHub**: Repository management, issues, PRs, and code review
+- **Filesystem**: Secure local file operations with project-wide access
+- **Fetch**: HTTP requests for APIs and web content
+- **Brave Search**: Privacy-focused web search for research
+- **Browserbase**: Cloud browser automation for complex news sites
+- **PostgreSQL**: Database queries and schema inspection
+- **Memory**: Persistent AI memory across sessions
+- **Puppeteer**: Local browser automation and web scraping
+- **Redis**: Real-time caching and data management
+- **Exa Search**: AI-powered semantic search
+- **Cloudflare**: CDN and edge computing services
+
+### **MCP Server Usage Examples**
+
+```python
+# Example: Using MCP servers in Uruguay News workflows
+
+# 1. Research Uruguayan political topics
+# Command: "Search for recent articles about Uruguay elections using Brave Search"
+# -> Uses brave-search MCP server
+
+# 2. Scrape El País headlines
+# Command: "Use Browserbase to extract headlines from elpais.com.uy"
+# -> Uses browserbase MCP server for JavaScript-heavy sites
+
+# 3. Database analysis
+# Command: "Query the articles table to show sentiment trends by source"
+# -> Uses postgres MCP server
+
+# 4. Repository management
+# Command: "Create an issue for implementing LangBiTe bias detection"
+# -> Uses github MCP server
+
+# 5. File operations
+# Command: "Analyze all Python files in the backend directory"
+# -> Uses filesystem MCP server
+
+# 6. Cache management
+# Command: "Store the latest sentiment analysis results in Redis"
+# -> Uses redis MCP server
+
+    async def fetch_news_article(self, url: str) -> Dict[str, Any]:
+        """Fetch news article using MCP fetch server"""
+        return await self.call_tool("fetch", "fetch_url", {
+            "url": url,
+            "format": "markdown"
+        })
+    
+    async def store_analysis_result(self, article_id: str, analysis: Dict[str, Any]):
+        """Store analysis in database using MCP postgres server"""
+        return await self.call_tool("postgres", "execute_query", {
+            "query": """
+                INSERT INTO article_analysis (article_id, sentiment, bias_score, entities, created_at)
+                VALUES ($1, $2, $3, $4, NOW())
+            """,
+            "params": [
+                article_id,
+                analysis["sentiment"],
+                analysis["bias_score"], 
+                json.dumps(analysis["entities"])
+            ]
+        })
+    
+    async def search_related_content(self, query: str) -> List[Dict[str, Any]]:
+        """Search for related content using Exa search"""
+        return await self.call_tool("exa", "search", {
+            "query": query,
+            "type": "neural",
+            "num_results": 10,
+            "include_domains": ["elpais.com.uy", "montevideo.com.uy", "teledoce.com"]
+        })
+```
+
+## Docker-Based MCP Configuration for Cursor
+
+```json
+{
+  "mcpServers": {
+    "github": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "-e", "GITHUB_PERSONAL_ACCESS_TOKEN",
+        "ghcr.io/github/github-mcp-server"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": ""
+      }
+    },
+    "filesystem": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "-v", ".:/workspace",
+        "ghcr.io/modelcontextprotocol/server-filesystem",
+        "/workspace"
+      ]
+    },
+    "fetch": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "ghcr.io/modelcontextprotocol/server-fetch"
+      ]
+    },
+    "postgres": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "-e", "DATABASE_URL",
+        "ghcr.io/modelcontextprotocol/server-postgres"
+      ],
+      "env": {
+        "DATABASE_URL": "postgresql://localhost:5432/uruguay_news"
+      }
+    },
+    "memory": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "ghcr.io/modelcontextprotocol/server-memory"
+      ]
+    },
+    "exa-search": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "-e", "EXA_API_KEY",
+        "ghcr.io/exa-ai/mcp-server"
+      ],
+      "env": {
+        "EXA_API_KEY": ""
+      }
+    },
+    "browserbase": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "-e", "BROWSERBASE_API_KEY",
+        "-e", "BROWSERBASE_PROJECT_ID",
+        "ghcr.io/browserbase/mcp-server-browserbase"
+      ],
+      "env": {
+        "BROWSERBASE_API_KEY": "",
+        "BROWSERBASE_PROJECT_ID": ""
+      }
+    }
+  }
+}
+```
+
+## News Scraping with MCP
+
+```python
+# backend/services/news_scraper.py
+from mcp.client import MCPClient
+
+class NewsScraperMCP:
+    """News scraping using MCP servers for enhanced reliability"""
+    
+    def __init__(self):
+        self.mcp_client = MCPClient()
+        self.uruguayan_sources = [
+            "https://www.elpais.com.uy",
+            "https://www.montevideo.com.uy", 
+            "https://www.teledoce.com",
+            "https://ladiaria.com.uy",
+            "https://www.brecha.com.uy"
+        ]
+    
+    async def scrape_source_advanced(self, source_url: str) -> List[Dict[str, Any]]:
+        """Advanced scraping using Browserbase MCP for JavaScript-heavy sites"""
+        
+        # Use Browserbase for sites requiring JavaScript rendering
+        if "teledoce.com" in source_url or "montevideo.com.uy" in source_url:
+            return await self.mcp_client.call_tool("browserbase", "navigate_and_extract", {
+                "url": source_url,
+                "selectors": {
+                    "articles": ".article-card",
+                    "title": "h2, h3",
+                    "link": "a[href]",
+                    "date": ".date, .timestamp",
+                    "summary": ".excerpt, .summary"
+                }
+            })
+        
+        # Use simple fetch for standard sites
+        else:
+            content = await self.mcp_client.call_tool("fetch", "fetch_url", {
+                "url": source_url,
+                "format": "html"
+            })
+            return self.parse_html_content(content)
+    
+    async def fetch_full_article(self, article_url: str) -> str:
+        """Fetch full article content as markdown"""
+        return await self.mcp_client.call_tool("fetch", "fetch_url", {
+            "url": article_url,
+            "format": "markdown",
+            "max_length": 50000
+        })
+    
+    async def verify_article_credibility(self, article_content: str) -> Dict[str, Any]:
+        """Use web search to verify article claims"""
+        key_claims = self.extract_key_claims(article_content)
+        
+        verification_results = []
+        for claim in key_claims:
+            search_results = await self.mcp_client.call_tool("exa", "search", {
+                "query": claim,
+                "type": "neural", 
+                "num_results": 5,
+                "include_domains": ["uycheck.uy", "factcheck.org", "snopes.com"]
+            })
+            verification_results.append({
+                "claim": claim,
+                "supporting_sources": search_results
+            })
+        
+        return {
+            "credibility_score": self.calculate_credibility_score(verification_results),
+            "verification_details": verification_results
+        }
+```
+
+## Memory and Context Management
+
+```python
+# backend/services/memory_service.py
+
+class NewsMemoryService:
+    """Persistent memory for news analysis using MCP memory server"""
+    
+    def __init__(self):
+        self.mcp_client = MCPClient()
+    
+    async def store_article_context(self, article: Dict[str, Any]):
+        """Store article and its analysis context"""
+        
+        # Create entities for the knowledge graph
+        entities = [
+            {
+                "name": f"article_{article['id']}",
+                "type": "news_article",
+                "observations": [
+                    f"Source: {article['source']}",
+                    f"Sentiment: {article['analysis']['sentiment']}",
+                    f"Bias: {article['analysis']['bias_score']}",
+                    f"Date: {article['published_date']}",
+                    f"Topic: {article['analysis']['category']}"
+                ]
+            }
+        ]
+        
+        # Add entities for mentioned people/organizations
+        for entity in article['analysis'].get('entities', []):
+            entities.append({
+                "name": entity['name'],
+                "type": entity['type'],
+                "observations": [
+                    f"Mentioned in {article['source']} on {article['published_date']}",
+                    f"Context: {entity.get('context', '')}"
+                ]
+            })
+        
+        # Store relationships
+        relations = []
+        for entity in article['analysis'].get('entities', []):
+            relations.append({
+                "from": f"article_{article['id']}",
+                "to": entity['name'],
+                "relationship": "mentions"
+            })
+        
+        await self.mcp_client.call_tool("memory", "create_entities", {"entities": entities})
+        await self.mcp_client.call_tool("memory", "create_relations", {"relations": relations})
+    
+    async def get_source_bias_history(self, source_name: str) -> Dict[str, Any]:
+        """Retrieve historical bias patterns for a news source"""
+        
+        entities = await self.mcp_client.call_tool("memory", "search_entities", {
+            "query": f"source:{source_name}",
+            "entity_type": "news_article"
+        })
+        
+        bias_scores = [entity.get("bias_score", 0.5) for entity in entities]
+        
+        return {
+            "source": source_name,
+            "average_bias": sum(bias_scores) / len(bias_scores) if bias_scores else 0.5,
+            "article_count": len(entities),
+            "bias_trend": self.calculate_bias_trend(bias_scores),
+            "credibility_score": self.calculate_credibility(entities)
+        }
+```
+
+## Real-time Processing Pipeline
+
+```python
+# backend/services/realtime_processor.py
+
+class RealtimeNewsProcessor:
+    """Real-time news processing using MCP servers"""
+    
+    def __init__(self):
+        self.mcp_client = MCPClient()
+        self.redis_client = None  # Will use MCP Redis server
+    
+    async def process_breaking_news(self, article_url: str):
+        """Process breaking news with priority handling"""
+        
+        # 1. Fetch article content
+        content = await self.mcp_client.call_tool("fetch", "fetch_url", {
+            "url": article_url,
+            "format": "markdown"
+        })
+        
+        # 2. Quick sentiment analysis
+        sentiment = await self.analyze_sentiment_fast(content["text"])
+        
+        # 3. Check for high-priority keywords
+        is_urgent = self.check_urgency_keywords(content["text"])
+        
+        # 4. Store in Redis for immediate access
+        cache_key = f"breaking_news:{hash(article_url)}"
+        await self.mcp_client.call_tool("redis", "set", {
+            "key": cache_key,
+            "value": json.dumps({
+                "url": article_url,
+                "sentiment": sentiment,
+                "urgent": is_urgent,
+                "processed_at": datetime.now().isoformat(),
+                "content_preview": content["text"][:500]
+            }),
+            "ttl": 3600  # 1 hour
+        })
+        
+        # 5. If urgent, trigger immediate notifications
+        if is_urgent:
+            await self.send_urgent_alert(article_url, sentiment)
+        
+        # 6. Queue for full analysis
+        await self.queue_full_analysis(article_url, content)
+    
+    async def send_urgent_alert(self, article_url: str, sentiment: Dict[str, Any]):
+        """Send urgent notifications using email MCP server"""
+        
+        await self.mcp_client.call_tool("email", "send_email", {
+            "to": ["admin@uruguaynews.uy", "alerts@uruguaynews.uy"],
+            "subject": "🚨 URGENT: Breaking News Alert",
+            "body": f"""
+            Urgent news detected:
+            
+            URL: {article_url}
+            Sentiment: {sentiment['label']} (confidence: {sentiment['confidence']:.2f})
+            Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+            
+            Please review immediately.
+            """,
+            "html": True
+        })
+```
+
+## Performance Optimization with MCP
+
+```python
+# backend/services/performance_optimizer.py
+
+class MCPPerformanceOptimizer:
+    """Optimize MCP server usage for better performance"""
+    
+    def __init__(self):
+        self.mcp_client = MCPClient()
+        self.cache_ttl = {
+            "article_analysis": 3600,    # 1 hour
+            "source_bias": 86400,       # 24 hours  
+            "search_results": 1800,     # 30 minutes
+            "entity_data": 7200         # 2 hours
+        }
+    
+    async def cached_analysis(self, article_id: str, analysis_func, *args):
+        """Cache analysis results using Redis MCP server"""
+        
+        cache_key = f"analysis:{article_id}:{analysis_func.__name__}"
+        
+        # Check cache first
+        cached_result = await self.mcp_client.call_tool("redis", "get", {
+            "key": cache_key
+        })
+        
+        if cached_result:
+            return json.loads(cached_result)
+        
+        # Perform analysis
+        result = await analysis_func(*args)
+        
+        # Cache result
+        await self.mcp_client.call_tool("redis", "set", {
+            "key": cache_key,
+            "value": json.dumps(result),
+            "ttl": self.cache_ttl.get("article_analysis", 3600)
+        })
+        
+        return result
+    
+    async def batch_process_articles(self, article_urls: List[str]):
+        """Process multiple articles efficiently using MCP servers"""
+        
+        # Batch fetch articles
+        fetch_tasks = [
+            self.mcp_client.call_tool("fetch", "fetch_url", {"url": url, "format": "markdown"})
+            for url in article_urls
+        ]
+        
+        articles = await asyncio.gather(*fetch_tasks, return_exceptions=True)
+        
+        # Filter successful fetches
+        valid_articles = [
+            (url, content) for url, content in zip(article_urls, articles)
+            if not isinstance(content, Exception)
+        ]
+        
+        # Batch store in database
+        if valid_articles:
+            await self.batch_store_articles(valid_articles)
+        
+        return len(valid_articles)
+```
+
+## Testing MCP Integration
+
+```python
+# tests/test_mcp_integration.py
+import pytest
+from unittest.mock import AsyncMock, patch
+
+@pytest.mark.asyncio
+async def test_mcp_news_fetching():
+    """Test news fetching through MCP servers"""
+    
+    mcp_client = MCPClient()
+    
+    # Mock MCP server responses
+    with patch.object(mcp_client, 'call_tool') as mock_call:
+        mock_call.return_value = {
+            "text": "Sample news article content",
+            "title": "Test Article",
+            "status": "success"
+        }
+        
+        result = await mcp_client.fetch_news_article("https://example.com/news")
+        
+        assert result["status"] == "success"
+        assert "Sample news article content" in result["text"]
+        mock_call.assert_called_once()
+
+@pytest.mark.asyncio
+async def test_mcp_memory_integration():
+    """Test memory storage and retrieval"""
+    
+    memory_service = NewsMemoryService()
+    
+    test_article = {
+        "id": "test_123",
+        "source": "El País",
+        "analysis": {
+            "sentiment": "positive",
+            "bias_score": 0.3,
+            "entities": [{"name": "Uruguay", "type": "location"}]
+        },
+        "published_date": "2024-01-15"
+    }
+    
+    # Test storing article context
+    await memory_service.store_article_context(test_article)
+    
+    # Test retrieving source history
+    history = await memory_service.get_source_bias_history("El País")
+    assert history["source"] == "El País"
+    assert "average_bias" in history
+```
+
+## Best Practices for MCP Usage
+
+1. **Server Selection**: Choose MCP servers based on specific needs
+2. **Error Handling**: Always handle MCP server failures gracefully
+3. **Performance**: Cache results when possible using Redis MCP server
+4. **Security**: Use environment variables for API keys and credentials
+5. **Monitoring**: Track MCP server performance and availability
+6. **Fallback**: Have backup methods when MCP servers are unavailable
+
+## Implementation Priority
+
+1. **Week 1**: Setup core MCP servers (filesystem, fetch, postgres)
+2. **Week 2**: Integrate news-specific servers (browserbase, exa)
+3. **Week 3**: Implement memory and caching systems
+4. **Week 4**: Add real-time processing and notifications
+5. **Week 5**: Performance optimization and testing
+description:
+globs:
+alwaysApply: false
+---

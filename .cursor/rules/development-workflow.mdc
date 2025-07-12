@@ -1,0 +1,156 @@
+---
+alwaysApply: true
+---
+
+# Development Workflow Overview
+
+## Project Development Philosophy
+
+This is an **AI-assisted, milestone-based** open-source project focused on cost-effective serverless deployment using Google Cloud services. Development prioritizes rapid iteration without fixed timelines, adapting to AI development speeds and community contributions.
+
+## Architecture Overview
+
+### **Google Cloud Serverless-First**
+- **Backend**: Cloud Functions (FastAPI with @functions_framework.http)
+- **Database**: Firestore (NoSQL document database)
+- **Caching**: Memorystore for Redis (managed Redis service)
+- **Frontend**: React deployed on GitHub Pages (free static hosting)
+- **Analytics**: BigQuery for metrics and trend analysis
+- **Monitoring**: Google Cloud Monitoring with custom dashboards
+
+### **AI-Powered Core Features**
+- **Spanish Sentiment Analysis**: 84%+ accuracy with Uruguayan cultural context
+- **LangBiTe Bias Detection**: 300+ prompts for comprehensive political bias analysis
+- **MCP Integration**: Model Context Protocol for seamless tool integration
+- **Real-time Processing**: <200ms response times with intelligent caching
+
+## Development Workflow
+
+### **1. Local Development Setup**
+```bash
+# Quick start commands
+git clone https://github.com/yourusername/uruguay-news.git
+cd uruguay-news
+
+# Install UV package manager (10-100x faster than pip)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Backend setup with Firestore emulator
+cd backend
+uv sync
+gcloud beta emulators firestore start
+
+# Frontend setup
+cd frontend/web
+npm install && npm start
+```
+
+### **2. Google Cloud Environment**
+- **Local Development**: Firestore emulator + local Redis + Functions Framework
+- **Staging**: Cloud Functions + Firestore + Memorystore (basic tier)
+- **Production**: Fully managed Google Cloud services with auto-scaling
+
+### **3. AI Model Integration Pattern**
+```python
+# All AI agents follow this Cloud Function pattern:
+import functions_framework
+from google.cloud import firestore
+
+@functions_framework.http
+def ai_agent_function(request):
+    """Standard pattern for AI analysis functions"""
+    db = firestore.Client()
+    
+    # 1. Validate input
+    # 2. Process with AI model (transformers, LangBiTe, etc.)
+    # 3. Store results in Firestore
+    # 4. Return structured response
+    
+    return {"status": "success", "data": result}
+```
+
+## Code Quality Standards
+
+### **Performance Requirements**
+- **Response Time**: <200ms for API endpoints
+- **AI Accuracy**: 84%+ for Spanish sentiment analysis
+- **Test Coverage**: 80%+ for business logic, 90%+ for AI models
+- **Caching**: Use Redis for repeated analysis results
+
+### **Technology Standards**
+- **Python**: Type hints, Ruff linting, mypy type checking
+- **JavaScript/TypeScript**: Strict mode, ESLint, Prettier
+- **Infrastructure**: Serverless-first, cost-optimization focused
+- **Documentation**: All functions must have docstrings
+
+## Deployment Strategy
+
+### **Automated Deployment**
+- **Frontend**: GitHub Actions → GitHub Pages (automatic on main branch)
+- **Backend**: GitHub Actions → Google Cloud Functions (on backend/ changes)
+- **Database**: Firestore with automatic indexing and scaling
+- **Monitoring**: Cloud Monitoring with custom metrics for AI performance
+
+### **Cost Optimization**
+- **Free Tier Maximization**: Stay within Google Cloud free limits
+- **Serverless Benefits**: Pay only for actual usage
+- **Caching Strategy**: Redis for expensive AI operations
+- **Performance Monitoring**: Track costs and optimize usage patterns
+
+## Community Engagement Model
+
+### **Open Source First**
+- **MIT License**: Permissive licensing for broad adoption
+- **Community-Driven**: No corporate funding requirements
+- **Transparent Development**: All decisions documented publicly
+- **Educational Focus**: Media literacy and democratic engagement
+
+### **Contribution Workflow**
+1. **Issues First**: Use GitHub Issues for feature requests and bugs
+2. **Fork & Branch**: Standard GitHub fork workflow
+3. **AI-Assisted Development**: Leverage Cursor AI, GitHub Copilot
+4. **CodeRabbit Reviews**: Automated code quality analysis
+5. **Community Review**: Human review for architectural decisions
+
+## Milestone-Based Development
+
+### **Current Focus Areas**
+- **Milestone 1**: Foundation (Firestore + Cloud Functions + React dashboard)
+- **Milestone 2**: Enhancement (Advanced AI + mobile app + BigQuery analytics)
+- **Milestone 3**: Community (Optimization + documentation + partnerships)
+
+### **No Fixed Timelines**
+- Development speed adapts to AI assistance capabilities
+- Community contributions welcome at any pace
+- Milestone completion triggers next phase planning
+- Quality and accuracy prioritized over speed
+
+## Emergency/Urgent Development
+
+### **Breaking News Response**
+- Real-time processing pipeline with Pub/Sub
+- Priority queuing for urgent political developments
+- Automated alerts through email and dashboard notifications
+- <5 second processing for high-priority content
+
+### **Infrastructure Resilience**
+- Google Cloud's 99.9% SLA for enterprise reliability
+- Automatic failover and scaling
+- Error monitoring with immediate alerts
+- Backup strategies for critical data
+
+## Success Metrics
+
+### **Technical Performance**
+- **10x Performance**: Improvement through serverless architecture
+- **60% Cost Reduction**: Via Google Cloud free tiers
+- **<200ms Response**: API performance targets
+- **84%+ Accuracy**: AI model quality requirements
+
+### **Community Impact**
+- **Democratic Engagement**: Media literacy improvement
+- **Transparent Algorithms**: Open-source bias detection
+- **Academic Partnerships**: Research collaboration opportunities
+- **Sustainable Operations**: Community-driven without expensive infrastructure
+
+This workflow enables rapid, cost-effective development of a world-class news analysis platform while maintaining high quality standards and community engagement.

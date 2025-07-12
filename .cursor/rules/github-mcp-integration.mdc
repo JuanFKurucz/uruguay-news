@@ -1,0 +1,151 @@
+---
+description: "GitHub MCP server integration, CodeRabbit reviews, repository management, and automated workflow tools"
+---
+
+# GitHub MCP Server Integration Guide
+
+## Available GitHub MCP Tools
+
+The project has access to the official GitHub MCP Server with comprehensive repository management capabilities:
+
+### Pull Request Management
+- `get_pull_request(owner, repo, pullNumber)` - Get PR details
+- `get_pull_request_reviews(owner, repo, pullNumber)` - Get all reviews including CodeRabbit
+- `get_pull_request_comments(owner, repo, pullNumber)` - Get PR comments
+- `get_pull_request_diff(owner, repo, pullNumber)` - Get code changes
+- `get_pull_request_files(owner, repo, pullNumber)` - Get changed files
+- `create_pull_request(owner, repo, title, head, base, body)` - Create new PR
+- `merge_pull_request(owner, repo, pullNumber)` - Merge approved PR
+
+### CodeRabbit Review Integration
+**Primary Use Case**: Reading and analyzing CodeRabbit automated reviews
+
+```bash
+# Example workflow for analyzing CodeRabbit feedback
+1. list_pull_requests(owner="JuanFKurucz", repo="uruguay-news", state="open")
+2. get_pull_request_reviews(owner="JuanFKurucz", repo="uruguay-news", pullNumber=X)
+3. get_pull_request_comments(owner="JuanFKurucz", repo="uruguay-news", pullNumber=X)
+```
+
+### Issue & Project Management  
+- `list_issues(owner, repo, state, labels)` - Find bugs and feature requests
+- `get_issue(owner, repo, issue_number)` - Get issue details
+- `update_issue(owner, repo, issue_number, title, body, state)` - Update issues
+- `search_issues(query, owner, repo)` - Search across issues
+
+### Workflow & CI/CD Monitoring
+- `list_workflows(owner, repo)` - Get repository workflows
+- `list_workflow_runs(owner, repo, workflow_id)` - Get workflow runs
+- `get_job_logs(owner, repo, run_id, failed_only=true)` - Debug failed builds
+- `rerun_failed_jobs(owner, repo, run_id)` - Retry failed CI jobs
+
+## CodeRabbit Review Analysis Workflow
+
+### Step 1: Identify Open PRs with Reviews
+```python
+# List open PRs that might have CodeRabbit reviews
+prs = list_pull_requests(
+    owner="JuanFKurucz", 
+    repo="uruguay-news", 
+    state="open"
+)
+```
+
+### Step 2: Analyze CodeRabbit Feedback
+```python
+# Get all reviews (including CodeRabbit automated reviews)
+reviews = get_pull_request_reviews(
+    owner="JuanFKurucz",
+    repo="uruguay-news", 
+    pullNumber=pr_number
+)
+
+# CodeRabbit reviews typically have:
+# - user.login = "coderabbitai" 
+# - automated security and quality feedback
+# - suggestions for code improvements
+```
+
+### Step 3: Extract Actionable Insights
+CodeRabbit typically provides feedback on:
+- **Security vulnerabilities** in dependencies or code patterns
+- **Code quality issues** like complexity, maintainability
+- **Performance optimizations** for database queries, API calls
+- **Best practices** for Python/TypeScript/React code
+- **Documentation gaps** missing docstrings or type hints
+
+### Step 4: Address Review Comments
+```python
+# Get specific line-by-line comments
+comments = get_pull_request_comments(
+    owner="JuanFKurucz",
+    repo="uruguay-news",
+    pullNumber=pr_number
+)
+
+# Filter for CodeRabbit comments and categorize by importance
+security_issues = [c for c in comments if "security" in c.body.lower()]
+quality_issues = [c for c in comments if "quality" in c.body.lower()]
+```
+
+## Repository Context for MCP Tools
+- **Owner**: "JuanFKurucz"
+- **Repository**: "uruguay-news" 
+- **Main Branch**: "main"
+- **Key Directories**: backend/, frontend/, docs/, .github/
+
+## Common MCP Usage Patterns
+
+### Daily Development Workflow
+1. **Check Notifications**: `list_notifications()` - See what needs attention
+2. **Review PRs**: Use PR tools to analyze CodeRabbit feedback
+3. **Monitor CI**: Check workflow status and debug failures
+4. **Update Issues**: Track progress on feature development
+
+### Release Preparation
+1. **List Open Issues**: Ensure no critical bugs remain
+2. **Check PR Status**: Verify all features are merged
+3. **Review Workflows**: Confirm CI/CD pipelines are green
+4. **Create Release**: Use GitHub tools to tag and release
+
+### Code Quality Monitoring
+1. **Security Alerts**: `list_secret_scanning_alerts()`, `list_dependabot_alerts()`
+2. **Code Scanning**: `list_code_scanning_alerts()` for static analysis results
+3. **PR Quality**: Regular CodeRabbit review analysis
+4. **Dependency Updates**: Monitor and apply Dependabot suggestions
+
+## Integration with Development Workflow
+
+### Pre-Commit Integration
+Before committing code, use MCP tools to:
+- Check for similar existing issues
+- Verify CI workflows will pass
+- Review recent PR feedback patterns
+
+### Post-Commit Integration  
+After pushing code, use MCP tools to:
+- Monitor workflow status
+- Check for new security alerts
+- Review CodeRabbit feedback on new PRs
+- Update related issues with progress
+
+## Best Practices for MCP Usage
+
+### Efficient API Usage
+- **Batch Operations**: Use pagination wisely, don't fetch everything
+- **Targeted Queries**: Use specific filters for issues, PRs, and workflows
+- **Cache Results**: Store frequently accessed data locally when appropriate
+
+### CodeRabbit Review Prioritization
+1. **Security Issues**: Address immediately (vulnerabilities, secrets)
+2. **Critical Quality**: Fix major code quality problems
+3. **Performance**: Optimize slow database queries, API calls
+4. **Documentation**: Add missing docstrings and type hints
+5. **Style/Minor**: Address when time permits
+
+### Notification Management
+- **Stay Updated**: Regular `list_notifications()` calls
+- **Filter Relevant**: Focus on repository-specific notifications
+- **Mark Read**: Use `mark_all_notifications_read()` to maintain clean state
+
+This GitHub MCP integration enables efficient repository management and ensures high code quality through automated CodeRabbit reviews and comprehensive CI/CD monitoring.

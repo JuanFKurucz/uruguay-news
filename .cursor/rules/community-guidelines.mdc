@@ -1,0 +1,82 @@
+---
+description: "Open-source community guidelines, contribution workflows, governance, and collaboration practices"
+---
+
+# Open-Source Community Guidelines
+
+## Project Mission & Values
+This is a **community-driven open-source project** aimed at improving democratic discourse in Uruguay through transparent, AI-powered news analysis. Core values:
+
+- **Transparency**: Open algorithms, clear methodologies, public decision-making
+- **Community**: Collaborative development, inclusive participation, shared ownership  
+- **Quality**: Rigorous testing, peer review, continuous improvement
+- **Impact**: Focus on democratic engagement, media literacy, informed citizenship
+- **Sustainability**: Long-term thinking, community-driven development, minimal costs
+
+## Contribution Areas Welcome
+### Technical Contributions
+- **Source Integration**: Add new Uruguayan news outlets to scraping pipeline
+- **AI/ML Improvements**: Enhance sentiment analysis, bias detection accuracy
+- **Frontend Features**: Improve dashboard UX, add new visualization types
+- **Mobile Development**: React Native app features and improvements
+- **Performance Optimization**: Database queries, caching, API efficiency
+- **Testing**: Unit tests, integration tests, end-to-end testing
+
+### Non-Technical Contributions  
+- **Documentation**: API docs, setup guides, user tutorials
+- **Translation**: Interface localization for different Spanish variants
+- **Design**: UI/UX improvements, accessibility enhancements
+- **Content**: Educational materials about media literacy
+- **Research**: Academic partnerships, methodology validation
+- **Community**: Mentoring new contributors, organizing events
+
+## Development Workflow for Contributors
+1. **Get Started**: Fork repository, set up development environment with UV
+2. **Find Issues**: Look for "good first issue" or "help wanted" labels
+3. **Discuss First**: Comment on issues before starting work to avoid duplication
+4. **Create Branch**: Use descriptive branch names (feature/add-source-x)
+5. **Follow Standards**: Use pre-commit hooks, follow coding guidelines
+6. **Test Thoroughly**: Add tests for new features, ensure existing tests pass
+7. **Document Changes**: Update README, API docs, or user guides as needed
+8. **Open PR**: Use PR template, link to relevant issues
+9. **Respond to Review**: Address CodeRabbit and human reviewer feedback
+10. **Celebrate**: Acknowledge your contribution in release notes!
+
+**Note**: Development is AI-assisted and milestone-based without fixed timelines, allowing for rapid iteration and adaptation based on progress and community needs.
+
+## Community Communication
+- **GitHub Issues**: Bug reports, feature requests, technical discussions
+- **GitHub Discussions**: Design decisions, roadmap planning, general questions
+- **Code Reviews**: Constructive feedback, educational comments, knowledge sharing
+- **Community Calls**: Regular video meetings for major decisions (if community grows)
+
+## Recognition & Attribution
+- **Contributors File**: Maintain [CONTRIBUTORS.md](mdc:CONTRIBUTORS.md) with all contributors
+- **Release Notes**: Highlight community contributions in each release
+- **Social Media**: Share contributor spotlights and project milestones
+- **Academic Credit**: Support contributors who want to publish research based on the project
+
+## Governance Model
+- **Core Maintainers**: Small team of experienced contributors with commit access
+- **Community Input**: Major decisions discussed in GitHub Discussions
+- **Consensus Building**: Aim for agreement before implementing significant changes
+- **Transparent Process**: Document decision-making rationale publicly
+
+## Sustainability & Resources
+- **Funding**: Explore grants, donations, or sponsorships for infrastructure costs
+- **Infrastructure**: Use free tiers and open-source tools to minimize costs
+- **Time Management**: Respect that contributors have varying availability
+- **Burnout Prevention**: Rotate responsibilities, take breaks, maintain work-life balance
+
+## Code of Conduct
+- **Respectful**: Treat all community members with respect and kindness
+- **Inclusive**: Welcome contributors regardless of background or experience level
+- **Constructive**: Provide helpful feedback, suggest improvements rather than just criticism
+- **Professional**: Maintain professional communication in all project interactions
+- **Learning-Focused**: Help others learn, share knowledge freely
+
+## Legal & Licensing
+- **MIT License**: Permissive license enabling broad usage and contribution
+- **Contributor Agreement**: Contributors retain copyright but grant usage rights
+- **Dependencies**: Ensure all dependencies are compatible with MIT license
+- **Attribution**: Respect original authors and sources in code and documentation

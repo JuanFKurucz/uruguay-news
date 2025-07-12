@@ -1,0 +1,677 @@
+
+---
+alwaysApply: true
+---
+
+# Development Practices & Code Quality
+
+## Google Cloud Development Standards
+Follow Google Cloud best practices for serverless development with Cloud Functions, Firestore, and modern Python standards.
+
+## Code Quality & AI Enhancement
+- **Linting**: Ruff (extremely fast Python linter/formatter)
+- **Type Checking**: mypy for Python, TypeScript strict mode
+- **Pre-commit**: Automated code quality checks
+- **AI Assistance**: GitHub Copilot, Cursor AI, MCP servers for enhanced development
+- **Testing**: pytest (Python), Jest (JavaScript), with AI-generated test cases
+
+## Google Cloud Function Standards
+
+### Function Structure
+```python
+import functions_framework
+from google.cloud import firestore
+from google.cloud import logging
+import json
+
+@functions_framework.http
+def main_handler(request):
+    """Cloud Function entry point with proper error handling"""
+    
+    # Initialize Google Cloud services
+    db = firestore.Client()
+    logging_client = logging.Client()
+    logger = logging_client.logger("uruguay-news")
+    
+    try:
+        # Validate request
+        if request.method != 'POST':
+            return {'error': 'Method not allowed'}, 405
+        
+        request_json = request.get_json(silent=True)
+        if not request_json:
+            return {'error': 'Invalid JSON'}, 400
+        
+        # Process request
+        result = process_news_analysis(request_json, db, logger)
+        
+        # Return structured response
+        return {
+            'status': 'success',
+            'data': result,
+            'timestamp': firestore.SERVER_TIMESTAMP
+        }, 200
+        
+    except Exception as e:
+        logger.error(f"Function error: {str(e)}")
+        return {'error': 'Internal server error'}, 500
+
+def process_news_analysis(data, db, logger):
+    """Business logic separated from Cloud Function handler"""
+    # Implementation here
+    pass
+```
+
+### Environment Configuration
+```python
+import os
+from google.cloud import secretmanager
+
+def get_secret(secret_name: str) -> str:
+    """Retrieve secrets from Google Secret Manager"""
+    client = secretmanager.SecretManagerServiceClient()
+    project_id = os.environ.get('GOOGLE_CLOUD_PROJECT')
+    
+    name = f"projects/{project_id}/secrets/{secret_name}/versions/latest"
+    response = client.access_secret_version(request={"name": name})
+    
+    return response.payload.data.decode("UTF-8")
+
+# Configuration class
+class Config:
+    """Application configuration using Google Cloud services"""
+    
+    def __init__(self):
+        self.project_id = os.environ.get('GOOGLE_CLOUD_PROJECT')
+        self.openai_api_key = get_secret('openai-api-key')
+        self.redis_url = os.environ.get('REDIS_URL')  # Memorystore Redis
+        self.environment = os.environ.get('ENVIRONMENT', 'development')
+    
+    @property
+    def is_production(self):
+        return self.environment == 'production'
+```
+
+## Firestore Data Modeling
+
+### Document Structure Standards
+```python
+from google.cloud import firestore
+from datetime import datetime
+from typing import Dict, Any, Optional
+
+class NewsArticleModel:
+    """Firestore document model for news articles"""
+    
+    def __init__(self, db: firestore.Client):
+        self.db = db
+        self.collection = 'articles'
+    
+    def create_article(self, article_data: Dict[str, Any]) -> str:
+        """Create new article document with validation"""
+        
+        # Validate required fields
+        required_fields = ['title', 'content', 'source', 'url', 'published_at']
+        for field in required_fields:
+            if field not in article_data:
+                raise ValueError(f"Missing required field: {field}")
+        
+        # Add metadata
+        document_data = {
+            **article_data,
+            'created_at': firestore.SERVER_TIMESTAMP,
+            'updated_at': firestore.SERVER_TIMESTAMP,
+            'status': 'pending_analysis',
+            'analysis_results': {}
+        }
+        
+        # Create document with auto-generated ID
+        doc_ref = self.db.collection(self.collection).document()
+        doc_ref.set(document_data)
+        
+        return doc_ref.id
+    
+    def update_analysis(self, article_id: str, analysis_data: Dict[str, Any]):
+        """Update article with analysis results"""
+        
+        doc_ref = self.db.collection(self.collection).document(article_id)
+        
+        doc_ref.update({
+            'analysis_results': analysis_data,
+            'status': 'analyzed',
+            'updated_at': firestore.SERVER_TIMESTAMP
+        })
+    
+    def get_by_source(self, source: str, limit: int = 10) -> list:
+        """Query articles by source with pagination"""
+        
+        query = (self.db.collection(self.collection)
+                .where('source', '==', source)
+                .order_by('published_at', direction=firestore.Query.DESCENDING)
+                .limit(limit))
+        
+        return [doc.to_dict() for doc in query.stream()]
+
+class BiasAnalysisModel:
+    """Firestore model for bias analysis results"""
+    
+    def __init__(self, db: firestore.Client):
+        self.db = db
+        self.collection = 'bias_analysis'
+    
+    def store_bias_analysis(self, article_id: str, bias_data: Dict[str, Any]) -> str:
+        """Store comprehensive bias analysis"""
+        
+        document_data = {
+            'article_id': article_id,
+            'political_lean': bias_data.get('political_lean'),
+            'bias_scores': bias_data.get('bias_scores', {}),
+            'detected_biases': bias_data.get('detected_biases', []),
+            'confidence_level': bias_data.get('confidence', 0.0),
+            'methodology': 'langbite-v2.1',
+            'analyzed_at': firestore.SERVER_TIMESTAMP
+        }
+        
+        doc_ref = self.db.collection(self.collection).document()
+        doc_ref.set(document_data)
+        
+        return doc_ref.id
+```
+
+## Testing Standards
+
+### AI Model Testing
+```python
+import pytest
+from google.cloud import firestore
+from google.cloud.firestore import Client
+import os
+
+class TestSpanishSentimentAccuracy:
+    """Test suite ensuring 84%+ accuracy for Spanish sentiment analysis"""
+    
+    @classmethod
+    def setup_class(cls):
+        """Initialize test environment with Firestore emulator"""
+        os.environ['FIRESTORE_EMULATOR_HOST'] = 'localhost:8080'
+        cls.db = firestore.Client()
+        cls.test_dataset = cls.load_test_dataset()
+    
+    def test_sentiment_accuracy_threshold(self):
+        """Verify sentiment analysis meets 84% accuracy requirement"""
+        
+        correct_predictions = 0
+        total_predictions = len(self.test_dataset)
+        
+        for test_case in self.test_dataset:
+            # Run sentiment analysis
+            result = analyze_spanish_sentiment(test_case['text'])
+            
+            # Check prediction accuracy
+            if result['sentiment'] == test_case['expected_sentiment']:
+                correct_predictions += 1
+        
+        accuracy = (correct_predictions / total_predictions) * 100
+        
+        # Assert 84% accuracy threshold
+        assert accuracy >= 84.0, f"Sentiment accuracy {accuracy:.2f}% below 84% threshold"
+        
+        # Store test results in Firestore
+        self.store_test_results('sentiment_accuracy', accuracy, total_predictions)
+    
+    def test_uruguayan_spanish_context(self):
+        """Test sentiment analysis with Uruguayan Spanish idioms and expressions"""
+        
+        uruguayan_test_cases = [
+            {
+                "text": "Está todo bomba en el gobierno",  # Uruguayan slang for "everything is good"
+                "expected_sentiment": "positive",
+                "confidence_threshold": 0.7
+            },
+            {
+                "text": "La cosa está muy pesada en el país",  # Uruguayan expression for difficult situation
+                "expected_sentiment": "negative", 
+                "confidence_threshold": 0.7
+            }
+        ]
+        
+        for case in uruguayan_test_cases:
+            result = analyze_spanish_sentiment(case['text'])
+            
+            assert result['sentiment'] == case['expected_sentiment']
+            assert result['confidence'] >= case['confidence_threshold']
+    
+    @staticmethod
+    def load_test_dataset():
+        """Load curated test dataset for Spanish news sentiment"""
+        # Implementation to load test cases
+        pass
+    
+    def store_test_results(self, test_name: str, accuracy: float, sample_size: int):
+        """Store test results in Firestore for tracking"""
+        
+        test_doc = {
+            'test_name': test_name,
+            'accuracy': accuracy,
+            'sample_size': sample_size,
+            'threshold_met': accuracy >= 84.0,
+            'run_at': firestore.SERVER_TIMESTAMP,
+            'environment': os.environ.get('ENVIRONMENT', 'test')
+        }
+        
+        self.db.collection('test_results').add(test_doc)
+
+class TestLangBiTeBiasDetection:
+    """Test LangBiTe bias detection with Uruguayan political context"""
+    
+    def test_political_bias_detection(self):
+        """Test bias detection across Uruguayan political spectrum"""
+        
+        political_test_cases = [
+            {
+                "text": "El Frente Amplio implementó políticas sociales exitosas",
+                "expected_bias": "left_leaning",
+                "bias_type": "political_lean"
+            },
+            {
+                "text": "El Partido Nacional defiende la tradición y el orden",
+                "expected_bias": "right_leaning", 
+                "bias_type": "political_lean"
+            },
+            {
+                "text": "Los datos económicos muestran resultados mixtos",
+                "expected_bias": "neutral",
+                "bias_type": "political_lean"
+            }
+        ]
+        
+        for case in political_test_cases:
+            bias_result = detect_bias_langbite(case['text'])
+            
+            assert case['bias_type'] in bias_result['detected_biases']
+            assert bias_result['political_lean'] == case['expected_bias']
+            assert bias_result['confidence'] >= 0.6
+    
+    def test_comprehensive_bias_coverage(self):
+        """Ensure all bias types are detected with LangBiTe methodology"""
+        
+        required_bias_types = [
+            'political_lean', 'gender_bias', 'racial_bias',
+            'economic_bias', 'social_bias', 'uruguayan_specific'
+        ]
+        
+        test_text = """
+        El presidente masculino tomó decisiones económicas que afectaron 
+        a los sectores más vulnerables de la sociedad uruguaya.
+        """
+        
+        bias_result = detect_bias_langbite(test_text)
+        
+        # Verify all bias types are evaluated
+        for bias_type in required_bias_types:
+            assert bias_type in bias_result['bias_scores']
+        
+        # Verify confidence levels
+        assert bias_result['confidence'] >= 0.7
+```
+
+### Integration Testing with Google Cloud Services
+```python
+import pytest
+from google.cloud import firestore
+from google.cloud import functions_v1
+from unittest.mock import patch
+
+@pytest.mark.integration
+class TestGoogleCloudIntegration:
+    """Integration tests for Google Cloud services"""
+    
+    @classmethod
+    def setup_class(cls):
+        cls.db = firestore.Client()
+        cls.functions_client = functions_v1.CloudFunctionsServiceClient()
+    
+    def test_firestore_connectivity(self):
+        """Test Firestore database connection and operations"""
+        
+        # Test document creation
+        test_doc = {
+            'test_field': 'test_value',
+            'created_at': firestore.SERVER_TIMESTAMP
+        }
+        
+        doc_ref = self.db.collection('test').document()
+        doc_ref.set(test_doc)
+        
+        # Test document retrieval
+        retrieved_doc = doc_ref.get()
+        assert retrieved_doc.exists
+        assert retrieved_doc.to_dict()['test_field'] == 'test_value'
+        
+        # Cleanup
+        doc_ref.delete()
+    
+    def test_cloud_function_deployment(self):
+        """Test Cloud Function deployment and invocation"""
+        
+        # Mock Cloud Function invocation
+        with patch('google.cloud.functions_v1.CloudFunctionsServiceClient') as mock_client:
+            mock_response = {'status': 'success', 'data': {}}
+            mock_client.return_value.call_function.return_value = mock_response
+            
+            result = invoke_analysis_function({'url': 'https://test.com'})
+            
+            assert result['status'] == 'success'
+    
+    def test_memorystore_redis_connection(self):
+        """Test Redis cache connectivity and operations"""
+        
+        import redis
+        
+        redis_client = redis.from_url(os.environ['REDIS_URL'])
+        
+        # Test cache set/get
+        test_key = 'test:key'
+        test_value = 'test_value'
+        
+        redis_client.set(test_key, test_value, ex=60)
+        retrieved_value = redis_client.get(test_key)
+        
+        assert retrieved_value.decode() == test_value
+        
+        # Cleanup
+        redis_client.delete(test_key)
+```
+
+## Performance Monitoring
+
+### Cloud Monitoring Integration
+```python
+from google.cloud import monitoring_v3
+from google.cloud import logging
+import time
+
+class PerformanceMonitor:
+    """Monitor application performance with Google Cloud Monitoring"""
+    
+    def __init__(self):
+        self.client = monitoring_v3.MetricServiceClient()
+        self.project_name = f"projects/{os.environ['GOOGLE_CLOUD_PROJECT']}"
+        self.logging_client = logging.Client()
+        self.logger = self.logging_client.logger("performance-monitor")
+    
+    def record_analysis_time(self, analysis_type: str, duration_ms: float):
+        """Record analysis processing time as custom metric"""
+        
+        series = monitoring_v3.TimeSeries()
+        series.metric.type = f"custom.googleapis.com/news_analysis/{analysis_type}_duration"
+        series.resource.type = "cloud_function"
+        series.resource.labels["function_name"] = "news-analysis"
+        
+        now = time.time()
+        seconds = int(now)
+        nanos = int((now - seconds) * 10 ** 9)
+        interval = monitoring_v3.TimeInterval(
+            {"end_time": {"seconds": seconds, "nanos": nanos}}
+        )
+        
+        point = monitoring_v3.Point({
+            "interval": interval,
+            "value": {"double_value": duration_ms}
+        })
+        
+        series.points = [point]
+        
+        self.client.create_time_series(
+            name=self.project_name, 
+            time_series=[series]
+        )
+    
+    def record_accuracy_metric(self, model_name: str, accuracy: float):
+        """Record AI model accuracy metrics"""
+        
+        self.logger.info(f"Model {model_name} accuracy: {accuracy:.2f}%")
+        
+        # Create custom metric for accuracy tracking
+        series = monitoring_v3.TimeSeries()
+        series.metric.type = f"custom.googleapis.com/ai_models/{model_name}_accuracy"
+        series.resource.type = "global"
+        
+        now = time.time()
+        seconds = int(now)
+        nanos = int((now - seconds) * 10 ** 9)
+        interval = monitoring_v3.TimeInterval(
+            {"end_time": {"seconds": seconds, "nanos": nanos}}
+        )
+        
+        point = monitoring_v3.Point({
+            "interval": interval,
+            "value": {"double_value": accuracy}
+        })
+        
+        series.points = [point]
+        
+        self.client.create_time_series(
+            name=self.project_name,
+            time_series=[series]
+        )
+
+# Performance decorator for Cloud Functions
+def monitor_performance(analysis_type: str):
+    """Decorator to monitor Cloud Function performance"""
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            start_time = time.time()
+            
+            try:
+                result = func(*args, **kwargs)
+                
+                # Record successful execution time
+                duration_ms = (time.time() - start_time) * 1000
+                monitor = PerformanceMonitor()
+                monitor.record_analysis_time(analysis_type, duration_ms)
+                
+                return result
+                
+            except Exception as e:
+                # Log error and re-raise
+                monitor = PerformanceMonitor()
+                monitor.logger.error(f"Function {func.__name__} failed: {str(e)}")
+                raise
+                
+        return wrapper
+    return decorator
+
+# Usage example
+@monitor_performance("sentiment_analysis")
+@functions_framework.http
+def sentiment_analysis_function(request):
+    """Cloud Function with performance monitoring"""
+    # Function implementation
+    pass
+```
+
+## Error Handling & Logging
+
+### Structured Logging
+```python
+import json
+from google.cloud import logging
+from google.cloud import error_reporting
+
+class StructuredLogger:
+    """Structured logging for Google Cloud Functions"""
+    
+    def __init__(self, name: str):
+        self.client = logging.Client()
+        self.logger = self.client.logger(name)
+        self.error_client = error_reporting.Client()
+    
+    def info(self, message: str, **kwargs):
+        """Log info with structured data"""
+        log_entry = {
+            'message': message,
+            'severity': 'INFO',
+            **kwargs
+        }
+        self.logger.log_struct(log_entry)
+    
+    def error(self, message: str, error: Exception = None, **kwargs):
+        """Log error with structured data and error reporting"""
+        log_entry = {
+            'message': message,
+            'severity': 'ERROR',
+            **kwargs
+        }
+        
+        if error:
+            log_entry['error'] = str(error)
+            log_entry['error_type'] = type(error).__name__
+            
+            # Report to Error Reporting
+            self.error_client.report_exception()
+        
+        self.logger.log_struct(log_entry)
+    
+    def analysis_result(self, article_id: str, analysis_type: str, result: dict):
+        """Log analysis results with structured format"""
+        log_entry = {
+            'message': f'Analysis completed: {analysis_type}',
+            'article_id': article_id,
+            'analysis_type': analysis_type,
+            'result_summary': {
+                'confidence': result.get('confidence', 0),
+                'processing_time_ms': result.get('processing_time', 0)
+            },
+            'severity': 'INFO'
+        }
+        self.logger.log_struct(log_entry)
+
+# Global error handler for Cloud Functions
+def handle_function_error(func):
+    """Decorator for Cloud Function error handling"""
+    def wrapper(*args, **kwargs):
+        logger = StructuredLogger(func.__name__)
+        
+        try:
+            return func(*args, **kwargs)
+        except ValueError as e:
+            logger.error(f"Validation error in {func.__name__}", error=e)
+            return {'error': 'Invalid input data'}, 400
+        except Exception as e:
+            logger.error(f"Unexpected error in {func.__name__}", error=e)
+            return {'error': 'Internal server error'}, 500
+    
+    return wrapper
+```
+
+## Security Standards
+
+### Input Validation
+```python
+from pydantic import BaseModel, ValidationError, validator
+from typing import Optional, List
+import bleach
+
+class NewsArticleInput(BaseModel):
+    """Input validation for news article data"""
+    
+    title: str
+    content: str
+    source: str
+    url: str
+    published_at: str
+    tags: Optional[List[str]] = []
+    
+    @validator('title', 'content')
+    def sanitize_html(cls, v):
+        """Remove potentially harmful HTML"""
+        return bleach.clean(v, strip=True)
+    
+    @validator('url')
+    def validate_url(cls, v):
+        """Validate URL format"""
+        if not v.startswith(('http://', 'https://')):
+            raise ValueError('Invalid URL format')
+        return v
+    
+    @validator('source')
+    def validate_source(cls, v):
+        """Validate news source"""
+        allowed_sources = [
+            'elpais.com.uy', 'montevideo.com.uy', 
+            'elobservador.com.uy', 'ladiaria.com.uy'
+        ]
+        
+        if not any(source in v for source in allowed_sources):
+            raise ValueError('Unknown news source')
+        return v
+
+def validate_request_data(request_json: dict) -> NewsArticleInput:
+    """Validate and sanitize request data"""
+    try:
+        return NewsArticleInput(**request_json)
+    except ValidationError as e:
+        raise ValueError(f"Invalid input data: {e}")
+```
+
+## Deployment Standards
+
+### GitHub Actions for Cloud Functions
+```yaml
+# .github/workflows/deploy.yml
+name: Deploy to Google Cloud Functions
+
+on:
+  push:
+    branches: [ main ]
+    paths: [ 'backend/**' ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r backend/requirements.txt
+    
+    - name: Run tests
+      run: |
+        pytest backend/tests/ -v
+    
+    - name: Setup Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
+      with:
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+    
+    - name: Deploy Cloud Functions
+      run: |
+        gcloud functions deploy news-analysis \
+          --runtime python311 \
+          --trigger-http \
+          --source backend/ \
+          --entry-point main_handler \
+          --memory 512MB \
+          --timeout 540s
+```
+
+## Code Quality Standards
+- **84%+ Test Coverage**: All AI models must maintain 84% or higher accuracy
+- **Type Hints**: All functions must include proper type annotations
+- **Documentation**: All modules and functions must have docstrings
+- **Performance**: API responses must be <200ms for 95% of requests
+- **Security**: All inputs must be validated and sanitized
+- **Monitoring**: All functions must include performance and error monitoring
+
+- **CDN Usage**: Cloudflare for static asset delivery
+- **Monitoring**: Prometheus + Grafana for system metrics

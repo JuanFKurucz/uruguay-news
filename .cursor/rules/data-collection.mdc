@@ -1,0 +1,107 @@
+---
+description: "Web scraping, data collection, news source integration, and content processing guidelines"
+---
+
+# Data Collection & Web Scraping Guidelines
+
+## Primary Uruguayan News Sources
+Configure scrapers for these key sources with specific patterns:
+
+### Traditional Media
+- **El País** (elpais.com.uy) - Center-right, 50-80 articles/day
+- **Montevideo Portal** (montevideo.com.uy) - Neutral, 100-150 articles/day  
+- **Teledoce** (teledoce.com) - Center, 40-60 articles/day + video
+- **La Diaria** (ladiaria.com.uy) - Progressive, 20-35 articles/day
+- **Brecha** (brecha.com.uy) - Left-wing weekly, investigative focus
+
+### Social Media
+- **Twitter/X**: Monitor key political figures, journalists, hashtags (#Uruguay, #Política)
+- **Facebook**: Public pages of news organizations and political figures
+- **Reddit**: r/uruguay subreddit discussions and sentiment
+
+## Ethical Scraping Practices
+```python
+# Always check robots.txt and respect rate limits
+@dataclass
+class ScrapingConfig:
+    rate_limit: float = 2.0  # seconds between requests
+    respect_robots_txt: bool = True
+    user_agent: str = "UruguayNewsBot/1.0 (contact@uruguaynews.com)"
+    max_retries: int = 3
+    timeout: int = 30
+
+# Implement polite scraping
+async def scrape_with_rate_limit(url: str, config: ScrapingConfig):
+    await asyncio.sleep(config.rate_limit)
+    # ... scraping logic
+```
+
+## Content Deduplication Strategy
+- **Hash-based**: Use content hashes to detect identical articles
+- **Semantic Similarity**: Use vector embeddings to find near-duplicates
+- **Title Matching**: Fuzzy matching for similar headlines across sources
+- **Publication Time**: Consider temporal clustering of similar stories
+
+## Data Quality & Validation
+```python
+# Content quality scoring
+def calculate_quality_score(article: NewsArticle) -> float:
+    score = 0.0
+    
+    # Length indicators
+    if len(article.content) > 200:
+        score += 0.3
+    
+    # Structure indicators  
+    if article.title and article.content and article.source:
+        score += 0.4
+    
+    # Language quality (Spanish text detection)
+    if is_spanish_text(article.content):
+        score += 0.3
+        
+    return min(score, 1.0)
+```
+
+## Real-time Data Pipeline
+1. **RSS Feeds**: Monitor for real-time updates
+2. **Social Media APIs**: Stream Twitter/Facebook posts
+3. **Webhook Receivers**: Accept push notifications from sources
+4. **Change Detection**: Monitor website changes for breaking news
+
+## Storage & Indexing Strategy
+```python
+# MongoDB document structure
+{
+    "_id": "unique_id",
+    "title": "Article title",
+    "content": "Full article text",
+    "source": "source_name",
+    "url": "original_url", 
+    "published_at": "ISO_timestamp",
+    "scraped_at": "ISO_timestamp",
+    "analysis": {
+        "sentiment": {"score": 0.8, "label": "positive"},
+        "bias": {"score": 0.3, "label": "center-left"},
+        "topics": ["politics", "economy"],
+        "entities": ["Luis Lacalle Pou", "Frente Amplio"]
+    },
+    "quality_score": 0.9,
+    "embedding": [0.1, 0.2, ...],  # Vector embedding
+    "hash": "content_hash"
+}
+```
+
+## Error Handling & Monitoring
+- **Failed Scrapes**: Log errors, implement retry logic with exponential backoff
+- **Content Changes**: Monitor for layout changes that break scrapers
+- **Rate Limiting**: Handle 429 responses gracefully
+- **Proxy Rotation**: Use proxy pools for high-volume scraping (if needed)
+- **Health Checks**: Regular monitoring of scraper success rates
+
+## Legal & Compliance
+- **Fair Use**: Only extract necessary content for analysis
+- **Copyright Respect**: Link back to original sources
+- **Privacy**: Don't collect personal user data from comments
+- **Terms of Service**: Respect website ToS and robots.txt
+- **Attribution**: Always credit original sources in the dashboard
