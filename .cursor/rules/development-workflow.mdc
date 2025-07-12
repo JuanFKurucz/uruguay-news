@@ -27,23 +27,11 @@ This is an **AI-assisted, milestone-based** open-source project focused on cost-
 ## Development Workflow
 
 ### **1. Local Development Setup**
-```bash
-# Quick start commands
-git clone https://github.com/yourusername/uruguay-news.git
-cd uruguay-news
-
-# Install UV package manager (10-100x faster than pip)
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Backend setup with Firestore emulator
-cd backend
-uv sync
-gcloud beta emulators firestore start
-
-# Frontend setup
-cd frontend/web
-npm install && npm start
-```
+- Clone repository and navigate to project directory
+- Install UV package manager (10-100x faster than pip)
+- Set up backend with Firestore emulator for local development
+- Configure frontend with npm and start development server
+- Use gcloud CLI for Google Cloud service management
 
 ### **2. Google Cloud Environment**
 - **Local Development**: Firestore emulator + local Redis + Functions Framework
@@ -51,23 +39,10 @@ npm install && npm start
 - **Production**: Fully managed Google Cloud services with auto-scaling
 
 ### **3. AI Model Integration Pattern**
-```python
-# All AI agents follow this Cloud Function pattern:
-import functions_framework
-from google.cloud import firestore
-
-@functions_framework.http
-def ai_agent_function(request):
-    """Standard pattern for AI analysis functions"""
-    db = firestore.Client()
-    
-    # 1. Validate input
-    # 2. Process with AI model (transformers, LangBiTe, etc.)
-    # 3. Store results in Firestore
-    # 4. Return structured response
-    
-    return {"status": "success", "data": result}
-```
+- Use @functions_framework.http decorator for Cloud Functions
+- Initialize Firestore client for data storage
+- Follow standard pattern: validate input, process with AI, store results, return response
+- Return structured JSON responses with status and data fields
 
 ## Code Quality Standards
 

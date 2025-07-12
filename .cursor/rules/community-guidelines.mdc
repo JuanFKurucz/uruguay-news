@@ -1,6 +1,3 @@
----
-description: "Open-source community guidelines, contribution workflows, governance, and collaboration practices"
----
 
 # Open-Source Community Guidelines
 
@@ -51,7 +48,7 @@ This is a **community-driven open-source project** aimed at improving democratic
 - **Community Calls**: Regular video meetings for major decisions (if community grows)
 
 ## Recognition & Attribution
-- **Contributors File**: Maintain [CONTRIBUTORS.md](mdc:CONTRIBUTORS.md) with all contributors
+- **Contributors File**: Maintain comprehensive contributor acknowledgment
 - **Release Notes**: Highlight community contributions in each release
 - **Social Media**: Share contributor spotlights and project milestones
 - **Academic Credit**: Support contributors who want to publish research based on the project
@@ -80,3 +77,49 @@ This is a **community-driven open-source project** aimed at improving democratic
 - **Contributor Agreement**: Contributors retain copyright but grant usage rights
 - **Dependencies**: Ensure all dependencies are compatible with MIT license
 - **Attribution**: Respect original authors and sources in code and documentation
+
+## Quality Standards
+### Code Quality
+- Maintain 84%+ accuracy for AI models
+- Follow type safety with comprehensive type hints
+- Include comprehensive documentation for all functions
+- Achieve high test coverage for business logic
+- Monitor performance and optimize for user experience
+
+### Community Standards
+- Welcome newcomers with patience and support
+- Provide constructive feedback in all interactions
+- Share knowledge and mentor less experienced contributors
+- Celebrate successes and learn from challenges together
+- Maintain inclusive and supportive environment
+
+## Collaboration Tools
+### Development Environment
+- Use modern AI-assisted development tools
+- Leverage GitHub MCP integration for efficient workflow
+- Implement CodeRabbit for automated code review
+- Use UV package manager for fast dependency management
+- Follow Google Cloud best practices for deployment
+
+### Communication Channels
+- GitHub Issues for technical discussion and bug reports
+- GitHub Discussions for broader project planning
+- Code reviews for knowledge sharing and quality assurance
+- Documentation for onboarding and reference materials
+
+## Growth & Outreach
+### Community Building
+- Actively welcome new contributors with clear onboarding
+- Create "good first issue" labels for newcomers
+- Provide mentorship opportunities for skill development
+- Organize community events and collaboration sessions
+- Build relationships with related open-source projects
+
+### External Engagement
+- Present at conferences and meetups about the project
+- Collaborate with academic institutions on research
+- Engage with Uruguayan media organizations for feedback
+- Partner with civic organizations interested in media literacy
+- Contribute to broader discussions about AI ethics and bias detection
+
+This community-driven approach ensures the project remains sustainable, inclusive, and focused on its mission of improving democratic discourse through transparent technology.

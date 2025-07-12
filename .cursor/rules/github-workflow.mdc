@@ -1,6 +1,3 @@
----
-description: "GitHub workflow, PR management, CodeRabbit reviews, CI/CD, and community engagement practices"
----
 
 # GitHub Workflow & PR Management
 
@@ -14,19 +11,18 @@ The project has access to GitHub MCP server tools for:
 
 ## Primary Use Case: CodeRabbit Review Analysis
 Use GitHub MCP tools primarily to:
-```
-# Read CodeRabbit reviews on PRs
-get_pull_request_reviews(owner="JuanFKurucz", repo="uruguay-news", pullNumber=X)
-get_pull_request_comments(owner="JuanFKurucz", repo="uruguay-news", pullNumber=X)
-```
+- Read CodeRabbit reviews on pull requests
+- Analyze automated feedback for code quality improvements
+- Track review patterns and common issues
+- Monitor CI/CD pipeline status and failures
 
 ## PR Workflow Standards
-1. **Create Feature Branch**: `git checkout -b feature/descriptive-name`
-2. **Make Changes**: Follow development practices, run pre-commit hooks
-3. **Open PR**: Use descriptive title and detailed description
-4. **CodeRabbit Review**: Automated review will analyze code quality, security, performance
+1. **Create Feature Branch**: Use descriptive branch names following conventions
+2. **Make Changes**: Follow development practices and run pre-commit hooks
+3. **Open PR**: Use descriptive titles and detailed descriptions
+4. **CodeRabbit Review**: Automated review analyzes code quality, security, performance
 5. **Address Feedback**: Respond to CodeRabbit suggestions and human reviewers
-6. **CI/CD Checks**: Ensure all tests pass, linting succeeds
+6. **CI/CD Checks**: Ensure all tests pass and linting succeeds
 7. **Merge**: Squash and merge after approval
 
 **Development Pace**: AI-assisted development enables rapid iteration. Focus on milestone completion rather than time-based deadlines.
@@ -38,16 +34,20 @@ get_pull_request_comments(owner="JuanFKurucz", repo="uruguay-news", pullNumber=X
 - **Best Practices**: Ensures adherence to Python/TypeScript standards
 - **Documentation**: Suggests missing docstrings and comments
 
-## Repository Structure for Reviews
-```
-uruguay-news/
-├── backend/                 # Python FastAPI application
-├── frontend/               # React web and React Native mobile
-├── docs/                   # Project documentation
-├── .github/                # GitHub workflows and templates
-├── pyproject.toml         # Python dependencies and config
-└── README.md              # Project overview and quick start
-```
+## Repository Structure Guidelines
+### Organization Standards
+- Clear directory structure for backend, frontend, docs
+- Consistent naming conventions across the project
+- Proper separation of concerns between components
+- GitHub workflows and templates in .github directory
+- Configuration files in project root
+
+### Documentation Standards
+- Comprehensive README with quick start guide
+- API documentation for all endpoints
+- Setup instructions for contributors
+- Architecture diagrams and design decisions
+- Troubleshooting guides and FAQs
 
 ## Issue Management
 - **Bug Reports**: Use issue templates with reproduction steps
@@ -57,6 +57,68 @@ uruguay-news/
 
 ## Community Engagement
 - **Welcome Contributors**: Clear onboarding process and good first issues
-- **Code Review Culture**: Constructive feedback, educational comments
+- **Code Review Culture**: Constructive feedback and educational comments
 - **Recognition**: Acknowledge community contributions in releases
 - **Documentation**: Keep README and docs updated for new contributors
+
+## CI/CD Best Practices
+### Automated Testing
+- Run comprehensive test suites on all PRs
+- Include unit tests, integration tests, and end-to-end tests
+- Validate code quality with linting and type checking
+- **AI Model Accuracy Testing**:
+  - **Dataset**: Use curated Uruguayan news test dataset (CC-BY-4.0 license)
+  - **Accuracy Threshold**: Spanish sentiment analysis ≥83.5%, bias detection ≥80%
+  - **Caching Strategy**: Cache model inference results to keep CI under 5 minutes
+  - **Performance Benchmarks**: Response time <200ms, memory usage <512MB
+
+### Deployment Automation
+- Automate deployment to staging environments
+- Use GitHub Actions for Cloud Functions deployment
+- Deploy frontend to GitHub Pages automatically
+- Monitor deployment success and rollback capabilities
+
+## Code Review Guidelines
+### Review Priorities
+1. **Security Issues**: Address vulnerabilities immediately
+2. **Functionality**: Ensure code works as intended
+3. **Performance**: Optimize for speed and efficiency
+4. **Maintainability**: Code clarity and documentation
+5. **Style**: Consistent formatting and conventions
+
+### Reviewer Responsibilities
+- Provide constructive and specific feedback
+- Test changes locally when necessary
+- Verify documentation updates
+- Check for breaking changes
+- Ensure CI/CD pipeline passes
+
+## Branch Protection Rules
+### Main Branch Protection
+- Require pull request reviews before merging
+- Dismiss stale reviews when new commits are pushed
+- Require status checks to pass before merging
+- Restrict pushes to main branch
+- Require up-to-date branches before merging
+
+### Quality Gates
+- All CI/CD checks must pass
+- Code coverage thresholds must be met
+- Security scans must complete successfully
+- AI model accuracy tests must pass
+- Documentation must be updated
+
+## Release Management
+### Version Control
+- Use semantic versioning for releases
+- Tag releases with descriptive release notes
+- Document breaking changes clearly
+- Include contributor acknowledgments
+- Link to resolved issues and merged PRs
+
+### Deployment Strategy
+- Staged deployment through environments
+- Feature flags for gradual rollouts
+- Monitoring and alerting for new releases
+- Rollback procedures for failed deployments
+- Performance monitoring post-deployment

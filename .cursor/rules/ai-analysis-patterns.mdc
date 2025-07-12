@@ -1,6 +1,3 @@
----
-description: This rule provides guidelines for implementing AI analysis patterns and LangChain/LangGraph workflows for scalable, serverless news analysis.
----
 
 # AI Analysis Patterns & LangChain Integration
 
@@ -10,560 +7,116 @@ Design LangChain/LangGraph workflows using Google Cloud services for scalable, s
 ## Core Analysis Agents
 
 ### 1. Content Extraction Agent
-```python
-from langchain.agents import Agent
-from google.cloud import firestore
-import functions_framework
-
-@functions_framework.http
-def content_extraction_agent(request):
-    """Extract and clean news content using MCP fetch servers"""
-    # Firestore client for storing extracted content
-    db = firestore.Client()
-    
-    # Use MCP fetch server for content retrieval
-    content = mcp_fetch_server.extract_article(url)
-    
-    # Store in Firestore with automatic indexing
-    doc_ref = db.collection('articles').document()
-    doc_ref.set({
-        'content': content,
-        'extracted_at': firestore.SERVER_TIMESTAMP,
-        'source_url': url
-    })
-    
-    return {"status": "extracted", "doc_id": doc_ref.id}
-```
+- Use Cloud Functions with @functions_framework.http decorators
+- Integrate MCP fetch servers for content retrieval
+- Store extracted content in Firestore with automatic indexing
+- Include metadata: source URL, extraction timestamp, content hash
 
 ### 2. Spanish Sentiment Analysis Agent
-```python
-from transformers import pipeline
-from google.cloud import functions_v1
-import redis
-
-@functions_framework.http  
-def sentiment_analysis_agent(request):
-    """84%+ accuracy Spanish sentiment analysis with cultural context"""
-    
-    # Redis cache for model results (Memorystore)
-    redis_client = redis.from_url(os.environ['REDIS_URL'])
-    
-    # Spanish-optimized transformer model
-    sentiment_analyzer = pipeline(
-        "sentiment-analysis",
-        model="nlptown/bert-base-multilingual-uncased-sentiment",
-        tokenizer="nlptown/bert-base-multilingual-uncased-sentiment"
-    )
-    
-    # Analyze with Uruguayan Spanish context
-    def analyze_uruguayan_sentiment(text):
-        # Handle local idioms and expressions
-        processed_text = preprocess_uruguayan_spanish(text)
-        
-        sentiment = sentiment_analyzer(processed_text)
-        
-        # Enhanced emotion detection for Spanish
-        emotions = detect_emotions_spanish(processed_text)
-        
-        return {
-            "sentiment": sentiment[0]['label'],
-            "confidence": sentiment[0]['score'],
-            "emotions": emotions,
-            "cultural_context": extract_cultural_markers(text)
-        }
-    
-    # Cache results in Memorystore Redis
-    cache_key = f"sentiment:{hash(text)}"
-    cached_result = redis_client.get(cache_key)
-    
-    if cached_result:
-        return json.loads(cached_result)
-    
-    result = analyze_uruguayan_sentiment(text)
-    redis_client.setex(cache_key, 3600, json.dumps(result))
-    
-    return result
-```
+- Target 84%+ accuracy for Spanish sentiment analysis
+- Use transformer models optimized for Spanish language
+- Handle Uruguayan Spanish context and cultural idioms
+- Implement Redis caching for model results (Memorystore)
+- Include emotion detection alongside sentiment scoring
 
 ### 3. LangBiTe Bias Detection Agent
-```python
-from langbite import BiasDetector
-from google.cloud import firestore
-from google.cloud import bigquery
+- Implement 300+ prompts for comprehensive bias detection
+- Focus on Uruguayan political spectrum analysis
+- Store detailed analysis in Firestore with BigQuery integration
+- Include political lean, bias scores, and confidence levels
 
-@functions_framework.http
-def bias_detection_agent(request):
-    """300+ prompts bias detection for Uruguayan political spectrum"""
-    
-    db = firestore.Client()
-    bq_client = bigquery.Client()
-    
-    # Initialize LangBiTe with Uruguayan political context
-    bias_detector = BiasDetector(
-        language='es',
-        region='uruguay',
-        political_spectrum=['frente_amplio', 'partido_nacional', 'partido_colorado']
-    )
-    
-    def detect_uruguayan_bias(article_text, source_name):
-        # 300+ prompts for comprehensive bias detection
-        bias_analysis = bias_detector.analyze_comprehensive(
-            text=article_text,
-            prompts=['political_lean', 'gender_bias', 'racial_bias', 
-                    'economic_bias', 'social_bias', 'uruguayan_specific']
-        )
-        
-        # Store detailed analysis in Firestore
-        bias_doc = {
-            'article_id': article_id,
-            'source': source_name,
-            'political_lean': bias_analysis['political_lean'],
-            'bias_scores': bias_analysis['scores'],
-            'detected_biases': bias_analysis['detected_biases'],
-            'confidence_level': bias_analysis['confidence'],
-            'analyzed_at': firestore.SERVER_TIMESTAMP
-        }
-        
-        db.collection('bias_analysis').add(bias_doc)
-        
-        # Store aggregated data in BigQuery for analytics
-        insert_bias_analytics(bq_client, bias_doc)
-        
-        return bias_analysis
-    
-    return detect_uruguayan_bias(request.json['text'], request.json['source'])
-```
-
-### 4. Entity Recognition Agent  
-```python
-import spacy
-from google.cloud import firestore
-from google.cloud import language_v1
-
-@functions_framework.http
-def entity_recognition_agent(request):
-    """Extract Uruguayan entities (people, organizations, locations)"""
-    
-    # Load Spanish NLP model optimized for Uruguay
-    nlp = spacy.load("es_core_news_sm")
-    
-    # Google Cloud Natural Language API for enhanced entity recognition
-    client = language_v1.LanguageServiceClient()
-    
-    def extract_uruguayan_entities(text):
-        # SpaCy processing for basic entities
-        doc = nlp(text)
-        spacy_entities = [(ent.text, ent.label_) for ent in doc.ents]
-        
-        # Google Cloud NLP for enhanced recognition
-        document = language_v1.Document(content=text, type_=language_v1.Document.Type.PLAIN_TEXT)
-        entities_result = client.analyze_entities(request={"document": document})
-        
-        # Combine and filter for Uruguayan context
-        uruguayan_entities = filter_uruguayan_entities(spacy_entities, entities_result.entities)
-        
-        # Store in Firestore with geographical context
-        db = firestore.Client()
-        entity_doc = {
-            'entities': uruguayan_entities,
-            'political_figures': extract_political_figures(uruguayan_entities),
-            'organizations': extract_organizations(uruguayan_entities),
-            'locations': extract_locations(uruguayan_entities),
-            'extracted_at': firestore.SERVER_TIMESTAMP
-        }
-        
-        return entity_doc
-    
-    return extract_uruguayan_entities(request.json['text'])
-```
+### 4. Entity Recognition Agent
+- Extract people, organizations, and locations from Spanish text
+- Combine SpaCy with Google Cloud Natural Language API
+- Filter results for Uruguayan context relevance
+- Store geographical and political entity mappings
 
 ### 5. Fact-Checking Agent
-```python
-from google.cloud import firestore
-import httpx
-
-@functions_framework.http  
-def fact_checking_agent(request):
-    """Verify claims against trusted Uruguayan sources"""
-    
-    db = firestore.Client()
-    
-    # Trusted Uruguayan fact-checking sources
-    trusted_sources = [
-        'https://www.elobservador.com.uy/',
-        'https://www.montevideo.com.uy/',
-        'https://www.elpais.com.uy/',
-        'https://ladiaria.com.uy/'
-    ]
-    
-    async def verify_claim(claim_text):
-        # Extract verifiable statements
-        claims = extract_factual_claims(claim_text)
-        
-        verification_results = []
-        
-        for claim in claims:
-            # Search trusted sources using MCP fetch
-            search_results = await search_trusted_sources(claim, trusted_sources)
-            
-            # Cross-reference with fact-checking databases
-            verification_score = calculate_verification_score(claim, search_results)
-            
-            verification_results.append({
-                'claim': claim,
-                'verification_score': verification_score,
-                'supporting_sources': search_results,
-                'confidence': verification_score['confidence']
-            })
-        
-        # Store fact-check results in Firestore
-        fact_check_doc = {
-            'original_text': claim_text,
-            'claims_analyzed': len(claims),
-            'verification_results': verification_results,
-            'overall_credibility': calculate_overall_credibility(verification_results),
-            'checked_at': firestore.SERVER_TIMESTAMP
-        }
-        
-        db.collection('fact_checks').add(fact_check_doc)
-        
-        return fact_check_doc
-    
-    return await verify_claim(request.json['text'])
-```
+- Verify claims against trusted Uruguayan news sources
+- Implement claim extraction and verification scoring
+- Cross-reference with established fact-checking databases
+- Provide supporting source links and confidence metrics
 
 ### 6. Memory & Context Agent
-```python
-from google.cloud import firestore
-from google.cloud import aiplatform
-import numpy as np
+- Use Firestore for persistent context storage
+- Implement vector embeddings for semantic memory
+- Track conversation history and analysis patterns
+- Enable context-aware analysis across sessions
 
-@functions_framework.http
-def memory_context_agent(request):
-    """Persistent context using Firestore and vector embeddings"""
-    
-    db = firestore.Client()
-    
-    # Vector embeddings for semantic memory
-    def store_semantic_memory(article_content, metadata):
-        # Generate embeddings using Google's text embedding API
-        embeddings = generate_text_embeddings(article_content)
-        
-        # Store in Firestore with vector field
-        memory_doc = {
-            'content': article_content,
-            'embeddings': embeddings.tolist(),
-            'metadata': metadata,
-            'created_at': firestore.SERVER_TIMESTAMP,
-            'source_hash': hash(article_content)
-        }
-        
-        db.collection('semantic_memory').add(memory_doc)
-        
-        return memory_doc
-    
-    def retrieve_similar_content(query_text, limit=5):
-        # Generate query embeddings
-        query_embeddings = generate_text_embeddings(query_text)
-        
-        # Vector similarity search in Firestore
-        similar_docs = search_similar_vectors(query_embeddings, limit)
-        
-        return similar_docs
-    
-    # Context-aware analysis
-    def analyze_with_context(new_article):
-        # Find related historical content
-        similar_articles = retrieve_similar_content(new_article['content'])
-        
-        # Analyze patterns and trends
-        context_analysis = {
-            'similar_articles': similar_articles,
-            'trend_analysis': analyze_temporal_trends(similar_articles),
-            'bias_evolution': track_bias_evolution(similar_articles),
-            'sentiment_patterns': analyze_sentiment_patterns(similar_articles)
-        }
-        
-        return context_analysis
-    
-    return analyze_with_context(request.json)
-```
+## LangChain/LangGraph Patterns
 
-## LangGraph Workflow Orchestration
+### Agent Communication
+- Design clear input/output contracts between agents
+- Use structured data formats (Pydantic models)
+- Implement error handling and fallback mechanisms
+- Enable parallel processing where possible
 
-### Main Analysis Pipeline
-```python
-from langgraph import Graph
-from google.cloud import functions_v1
+### Workflow Orchestration
+- Use LangGraph for complex multi-step analysis workflows
+- Implement conditional routing based on content type
+- Design retry logic for failed analysis steps
+- Track processing metrics for performance optimization
 
-def create_analysis_pipeline():
-    """Orchestrate multi-agent analysis using LangGraph"""
-    
-    # Define the analysis workflow
-    workflow = Graph()
-    
-    # Add agents as nodes
-    workflow.add_node("extract", content_extraction_agent)
-    workflow.add_node("sentiment", sentiment_analysis_agent) 
-    workflow.add_node("bias", bias_detection_agent)
-    workflow.add_node("entities", entity_recognition_agent)
-    workflow.add_node("factcheck", fact_checking_agent)
-    workflow.add_node("memory", memory_context_agent)
-    
-    # Define the flow
-    workflow.add_edge("extract", "sentiment")
-    workflow.add_edge("extract", "bias")
-    workflow.add_edge("extract", "entities")
-    workflow.add_edge("sentiment", "factcheck")
-    workflow.add_edge("bias", "factcheck")
-    workflow.add_edge("entities", "factcheck")
-    workflow.add_edge("factcheck", "memory")
-    
-    # Set entry and exit points
-    workflow.set_entry_point("extract")
-    workflow.set_finish_point("memory")
-    
-    return workflow.compile()
+### Memory Management
+- Implement conversation memory for context retention
+- Use vector stores for semantic similarity search
+- Design memory cleanup and archiving strategies
+- Balance memory usage with analysis quality
 
-@functions_framework.http
-def process_news_article(request):
-    """Main Cloud Function entry point for news analysis"""
-    
-    pipeline = create_analysis_pipeline()
-    
-    # Process the article through the pipeline
-    result = pipeline.invoke({
-        "url": request.json['url'],
-        "source": request.json['source'],
-        "priority": request.json.get('priority', 'normal')
-    })
-    
-    return {
-        "status": "completed",
-        "analysis_id": result['memory']['doc_id'],
-        "processing_time": result['processing_time'],
-        "confidence_scores": extract_confidence_scores(result)
-    }
-```
+## Performance Guidelines
 
-## Performance Optimization
+### Response Time Targets
+- API endpoints: <200ms response time
+- Analysis pipelines: <5 seconds for complete analysis
+- Real-time monitoring: <1 second for priority content
+- Batch processing: Optimize for throughput over latency
 
-### Caching Strategy with Memorystore Redis
-```python
-import redis
-from functools import wraps
+### Accuracy Requirements
+- Spanish sentiment analysis: 84%+ accuracy
+- Bias detection: High precision with clear confidence scores
+- Entity extraction: Focus on precision over recall
+- Fact-checking: Conservative scoring with verified sources
 
-# Redis connection for Memorystore
-redis_client = redis.from_url(os.environ['MEMORYSTORE_REDIS_URL'])
+### Scalability Patterns
+- Use serverless architecture for auto-scaling
+- Implement intelligent caching strategies
+- Design stateless agents for horizontal scaling
+- Monitor resource usage and optimize costs
 
-def cache_analysis_result(cache_duration=3600):
-    """Decorator for caching analysis results"""
-    def decorator(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            # Create cache key from function and arguments
-            cache_key = f"{func.__name__}:{hash(str(args) + str(kwargs))}"
-            
-            # Try to get from cache
-            cached_result = redis_client.get(cache_key)
-            if cached_result:
-                return json.loads(cached_result)
-            
-            # Execute function and cache result
-            result = func(*args, **kwargs)
-            redis_client.setex(cache_key, cache_duration, json.dumps(result))
-            
-            return result
-        return wrapper
-    return decorator
+## Error Handling & Monitoring
 
-@cache_analysis_result(cache_duration=1800)
-def analyze_sentiment_cached(text):
-    """Cached sentiment analysis for repeated content"""
-    return sentiment_analysis_agent(text)
-```
+### Graceful Degradation
+- Provide fallback responses when AI services fail
+- Use cached results when real-time analysis unavailable
+- Implement circuit breakers for external dependencies
+- Log errors with sufficient context for debugging
 
-## Real-time Processing with Cloud Functions
+### Quality Assurance
+- Validate input data before processing
+- Monitor model accuracy with test datasets
+- Track processing success rates and failure patterns
+- Implement automated quality checks
 
-### Event-Driven Architecture
-```python
-from google.cloud import pubsub_v1
-from google.cloud import firestore
+## Integration Guidelines
 
-def setup_real_time_processing():
-    """Set up Pub/Sub for real-time news processing"""
-    
-    subscriber = pubsub_v1.SubscriberClient()
-    subscription_path = subscriber.subscription_path(PROJECT_ID, SUBSCRIPTION_NAME)
-    
-    def callback(message):
-        """Process incoming news articles in real-time"""
-        try:
-            article_data = json.loads(message.data.decode())
-            
-            # Trigger analysis pipeline
-            pipeline_result = process_news_article_async(article_data)
-            
-            # Send alerts for high-priority content
-            if pipeline_result['priority'] == 'urgent':
-                send_real_time_alert(pipeline_result)
-            
-            message.ack()
-            
-        except Exception as e:
-            logging.error(f"Error processing message: {e}")
-            message.nack()
-    
-    # Configure flow control for optimal performance
-    flow_control = pubsub_v1.types.FlowControl(max_messages=100)
-    
-    streaming_pull_future = subscriber.subscribe(
-        subscription_path, 
-        callback=callback,
-        flow_control=flow_control
-    )
-    
-    return streaming_pull_future
-```
+### Google Cloud Services
+- Use Cloud Functions for serverless agent deployment
+- Store results in Firestore with proper indexing
+- Leverage Memorystore Redis for caching
+- Monitor performance with Cloud Monitoring
 
-## Monitoring & Analytics
+### MCP Server Integration
+- Use MCP servers for external tool interactions
+- Implement proper authentication and rate limiting
+- Handle MCP server failures gracefully
+- Monitor MCP server health and performance
 
-### BigQuery Integration for Analytics
-```python
-from google.cloud import bigquery
+### External APIs
+- Implement proper authentication for AI model APIs
+- Use connection pooling for database connections
+- Handle rate limiting from external services
+- Cache expensive API calls appropriately
 
-def store_analysis_metrics(analysis_result):
-    """Store analysis metrics in BigQuery for dashboards"""
-    
-    client = bigquery.Client()
-    table_id = f"{PROJECT_ID}.news_analytics.analysis_metrics"
-    
-    rows_to_insert = [{
-        "article_id": analysis_result['article_id'],
-        "sentiment_score": analysis_result['sentiment']['confidence'],
-        "bias_score": analysis_result['bias']['overall_score'],
-        "processing_time_ms": analysis_result['processing_time'],
-        "accuracy_score": analysis_result['accuracy'],
-        "source": analysis_result['source'],
-        "analyzed_at": datetime.utcnow().isoformat()
-    }]
-    
-    errors = client.insert_rows_json(table_id, rows_to_insert)
-    
-    if not errors:
-        logging.info("Analysis metrics stored successfully")
-    else:
-        logging.error(f"Error storing metrics: {errors}")
-```
-
-## Testing & Validation
-
-### Automated Accuracy Testing
-```python
-import pytest
-from google.cloud import firestore
-
-class TestSpanishSentimentAccuracy:
-    """Test suite for 84%+ Spanish sentiment accuracy"""
-    
-    def setup_method(self):
-        self.db = firestore.Client()
-        self.test_dataset = load_uruguayan_test_dataset()
-    
-    def test_sentiment_accuracy_threshold(self):
-        """Ensure sentiment analysis meets 84% accuracy threshold"""
-        
-        correct_predictions = 0
-        total_predictions = len(self.test_dataset)
-        
-        for test_case in self.test_dataset:
-            predicted_sentiment = sentiment_analysis_agent(test_case['text'])
-            
-            if predicted_sentiment['sentiment'] == test_case['expected_sentiment']:
-                correct_predictions += 1
-        
-        accuracy = (correct_predictions / total_predictions) * 100
-        
-        assert accuracy >= 84.0, f"Sentiment accuracy {accuracy}% below 84% threshold"
-    
-    def test_bias_detection_coverage(self):
-        """Test LangBiTe bias detection with Uruguayan political content"""
-        
-        uruguayan_political_texts = load_political_test_cases()
-        
-        for text_case in uruguayan_political_texts:
-            bias_result = bias_detection_agent(text_case['content'])
-            
-            # Verify all bias types are checked
-            required_bias_types = ['political_lean', 'gender_bias', 'racial_bias']
-            
-            for bias_type in required_bias_types:
-                assert bias_type in bias_result['detected_biases']
-            
-            # Verify confidence levels
-            assert bias_result['confidence'] >= 0.7
-```
-
-## AI Model Management
-
-### Model Version Control
-```python
-from google.cloud import aiplatform
-from google.cloud import firestore
-
-def manage_model_versions():
-    """Track and manage AI model versions in production"""
-    
-    db = firestore.Client()
-    
-    # Current model versions
-    model_registry = {
-        'sentiment_model': 'nlptown/bert-base-multilingual-uncased-sentiment',
-        'bias_detector': 'langbite-v2.1',
-        'entity_extractor': 'es_core_news_sm-3.4.0',
-        'embedding_model': 'google/universal-sentence-encoder-multilingual'
-    }
-    
-    # Store model metadata
-    for model_name, model_version in model_registry.items():
-        model_doc = {
-            'model_name': model_name,
-            'version': model_version,
-            'deployed_at': firestore.SERVER_TIMESTAMP,
-            'performance_metrics': get_model_performance(model_name),
-            'status': 'active'
-        }
-        
-        db.collection('model_registry').document(model_name).set(model_doc)
-    
-    return model_registry
-
-def a_b_test_models(model_a, model_b, test_data):
-    """A/B testing for different AI models"""
-    
-    results_a = []
-    results_b = []
-    
-    for test_case in test_data:
-        result_a = model_a.predict(test_case)
-        result_b = model_b.predict(test_case)
-        
-        results_a.append(result_a)
-        results_b.append(result_b)
-    
-    # Compare performance metrics
-    accuracy_a = calculate_accuracy(results_a, test_data)
-    accuracy_b = calculate_accuracy(results_b, test_data)
-    
-    winner = 'model_a' if accuracy_a > accuracy_b else 'model_b'
-    
-    return {
-        'winner': winner,
-        'accuracy_a': accuracy_a,
-        'accuracy_b': accuracy_b,
-        'confidence_interval': calculate_confidence_interval(results_a, results_b)
-    }
-```
-
-5. **Real-time Monitoring**: Add social media monitoring capabilities
-6. **Performance Optimization**: Implement caching and batch processing
+## Future Enhancements
+- **Real-time Monitoring**: Add social media monitoring capabilities
+- **Performance Optimization**: Implement caching and batch processing

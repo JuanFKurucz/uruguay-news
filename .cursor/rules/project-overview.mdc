@@ -1,143 +1,140 @@
 
-# Uruguay News Monitoring & Analysis System - Project Overview
+# Uruguay News Analysis System - Project Overview
 
 ## Project Mission
-This is an **open-source AI-powered news analysis platform** for Uruguay, designed to transform how Uruguayan citizens engage with political and social discourse through intelligent media monitoring and bias detection. The project is **community-driven** and developed by AI assistance guided by experienced engineers.
+This is an **open-source AI-powered news analysis platform** for Uruguay, designed to transform how Uruguayan citizens engage with political and social discourse through intelligent media monitoring and bias detection. The project is **community-driven** and developed with AI assistance.
 
 ## Revolutionary AI-Enhanced Development
-This project leverages **cutting-edge AI development tools and MCP (Model Context Protocol)** servers that fundamentally transform how news analysis systems are built:
+This project leverages **cutting-edge AI development tools and MCP (Model Context Protocol)** servers:
 
-- **MCP Integration**: 75% of companies adopting MCP by 2026 - we're pioneering early adoption
-- **LangBiTe Bias Detection**: Open-source tool with 300+ prompts for detecting bias in 35+ languages
-- **Transformer Models**: 84%+ accuracy sentiment analysis for Spanish language news
-- **Real-time AI Monitoring**: Threat Matrix-style systems (used by Wimbledon for abuse detection)
+- **MCP Integration**: Early adoption of standardized AI tool integration
+- **LangBiTe Bias Detection**: Open-source bias detection with 300+ prompts
+- **Transformer Models**: 84%+ accuracy sentiment analysis for Spanish language
+- **Real-time AI Monitoring**: Advanced threat detection and monitoring systems
 
 ## Core Architecture & Entry Points
-- **Backend**: [backend/app/main.py](mdc:backend/app/main.py) - FastAPI application deployed on Google Cloud Functions
-- **Frontend**: [frontend/web/src/App.tsx](mdc:frontend/web/src/App.tsx) - React dashboard deployed on GitHub Pages
-- **Mobile**: [frontend/mobile/App.tsx](mdc:frontend/mobile/App.tsx) - React Native mobile app
-- **Configuration**: [pyproject.toml](mdc:pyproject.toml) - Python project configuration with UV package manager
-- **Google Cloud**: Serverless architecture with Cloud Functions and Firestore
+- **Backend**: FastAPI application deployed on Google Cloud Functions
+- **Frontend**: React dashboard deployed on GitHub Pages
+- **Mobile**: React Native mobile application
+- **Configuration**: Python project with UV package manager
+- **Infrastructure**: Serverless Google Cloud architecture
 
-## Game-Changing Technology Stack
-- **Backend**: FastAPI + LangChain/LangGraph + UV package manager (10-100x faster than pip)
-- **Database**: Google Firestore (NoSQL document database) + Memorystore for Redis
-- **AI/ML**: Revolutionary MCP servers for seamless tool integration + OpenAI (migrating to Gemini)
-- **Deployment**: Serverless Cloud Functions (backend) + GitHub Pages (frontend)
-- **Development**: Ruff (extremely fast linting), mypy, pre-commit hooks
-- **Infrastructure**: Google Cloud services with generous free tiers
+## Technology Stack Overview
+- **Backend**: FastAPI + LangChain/LangGraph + UV package manager
+- **Database**: Google Firestore (NoSQL) + Memorystore Redis (caching)
+- **AI/ML**: MCP servers for tool integration + OpenAI (migrating to Gemini)
+- **Deployment**: Serverless Cloud Functions + GitHub Pages
+- **Development**: Ruff linting, mypy, pre-commit hooks
+- **Infrastructure**: Google Cloud services with free tier optimization
 
-## Essential MCP Servers Integrated
+## Essential MCP Servers
 ### Core Infrastructure
-- `@modelcontextprotocol/server-filesystem` - File operations
-- `@modelcontextprotocol/server-fetch` - Web content fetching  
-- `@modelcontextprotocol/server-github` - Repository management
-- Custom Firestore MCP server - Database operations
-- `@modelcontextprotocol/server-memory` - Knowledge graph memory
+- Filesystem operations for local file management
+- Web content fetching for news scraping
+- Repository management for development workflow
+- Document database operations for data storage
+- Knowledge graph memory for context retention
 
-### Google Cloud MCP Servers
-- Custom Firestore MCP server - Document database operations
-- Redis MCP for Memorystore - Real-time caching
-- Cloud Storage MCP - File and media storage
-- BigQuery MCP - Analytics and data warehousing
-- Cloud Functions MCP - Serverless deployment management
+### Google Cloud Integration
+- Custom Firestore server for document operations
+- Redis server for Memorystore integration
+- Cloud Storage server for file management
+- BigQuery server for analytics and warehousing
+- Cloud Functions server for deployment management
 
 ## Advanced AI Analysis Capabilities
 ### Sentiment Analysis (84%+ Accuracy)
-- **Transformer Models**: Spanish-optimized models for accurate emotion detection
-- **Multi-level Analysis**: Sentence-level and document-level sentiment
-- **Emotion Recognition**: Joy, anger, sadness, fear, disgust detection
-- **Cultural Context**: Uruguayan Spanish idioms and expressions
+- Spanish-optimized transformer models
+- Multi-level analysis (sentence and document)
+- Cultural context for Uruguayan Spanish
+- Emotion recognition alongside sentiment
 
-### Bias Detection (LangBiTe Integration)  
-- **300+ Prompts**: Comprehensive bias detection across 35+ languages
-- **Political Spectrum**: Left/center/right classification for Uruguayan politics
-- **Gender & Racial Bias**: Advanced detection of discriminatory language
-- **Source Credibility**: Automated fact-checking against trusted sources
+### Bias Detection (LangBiTe Integration)
+- Comprehensive bias detection across political spectrum
+- 300+ prompts for thorough analysis
+- Uruguayan political context awareness
+- Automated fact-checking capabilities
 
-### Real-time Monitoring
-- **Threat Detection**: AI-powered monitoring for misinformation and harmful content
-- **Social Media Analysis**: Twitter, Facebook, Reddit monitoring  
-- **Breaking News Processing**: Priority handling with immediate alerts
-- **Performance**: <200ms response times with intelligent caching
+### Real-time Processing
+- AI-powered monitoring for misinformation
+- Social media analysis integration
+- Breaking news priority processing
+- Sub-200ms response times with caching
 
 ## Target News Sources
-Primary focus on Uruguayan media: El País, Montevideo Portal, Teledoce, La Diaria, Brecha, plus social media (Twitter, Facebook, Reddit r/uruguay)
+Primary focus on Uruguayan media outlets including traditional newspapers, digital platforms, and social media monitoring for comprehensive coverage.
 
 ## AI-Powered Features
 ### Multi-Agent Analysis Pipeline
-1. **Content Extraction Agent**: Clean and parse articles using MCP fetch servers
-2. **Sentiment Analysis Agent**: 84%+ accuracy with transformer models
-3. **Bias Detection Agent**: LangBiTe methodology for comprehensive bias analysis
-4. **Entity Recognition Agent**: Extract people, organizations, locations
-5. **Fact-Checking Agent**: Verify claims using web search MCPs
-6. **Memory Agent**: Persistent context using MCP memory server
+1. **Content Extraction**: Clean article parsing
+2. **Sentiment Analysis**: Emotion and sentiment detection
+3. **Bias Detection**: Political and social bias analysis
+4. **Entity Recognition**: People, organizations, locations
+5. **Fact-Checking**: Claim verification
+6. **Memory Management**: Context persistence
 
-### Advanced Capabilities
-- **Semantic Search**: Vector embeddings using Google Vertex AI or Weaviate
-- **Duplicate Detection**: Cosine similarity for identifying repeated content
-- **Source Tracking**: Historical bias patterns and credibility scoring stored in Firestore
-- **Real-time Alerts**: Email notifications for urgent breaking news
-- **API Integration**: GraphQL and REST APIs with OpenAPI documentation
+### Advanced Processing
+- **Semantic Search**: Vector embeddings for similarity
+- **Duplicate Detection**: Content deduplication
+- **Source Tracking**: Historical pattern analysis
+- **Real-time Alerts**: Urgent news notifications
+- **API Integration**: Comprehensive API access
 
 ## Development Philosophy
-- **Open Source First**: Cost-effective, community-driven development
-- **AI-Assisted**: Leveraging cutting-edge AI tools for rapid, high-quality development with milestone-based progression
-- **Google Cloud Native**: Serverless-first architecture with generous free tiers
-- **Modern Stack**: FastAPI, React, UV package manager, Ruff linting
-- **Democratic Impact**: Focus on media literacy and informed citizenship in Uruguay
-- **Agile Development**: Milestone-based approach without fixed timelines, adapting to AI development speeds
+- **Open Source First**: Community-driven development
+- **AI-Assisted**: Leveraging modern AI development tools
+- **Google Cloud Native**: Serverless-first architecture
+- **Modern Stack**: Latest tools and frameworks
+- **Democratic Impact**: Media literacy focus
+- **Milestone-Based**: Flexible development timeline
 
 ## Performance & Scalability Goals
-- **10x Performance**: Improvement through serverless architecture and Google Cloud services
-- **30% Accuracy Improvement**: Via transformer models and LangBiTe bias detection
-- **60% Cost Reduction**: Through Google Cloud free tiers and serverless architecture
-- **99.9% Reliability**: Google Cloud's enterprise-grade infrastructure
-- **<200ms Response**: API response times with Cloud Functions and global CDN
+- **10x Performance**: Through serverless architecture
+- **30% Accuracy Improvement**: Via advanced AI models
+- **60% Cost Reduction**: Through free tier optimization
+- **99.9% Reliability**: Enterprise-grade infrastructure
+- **Sub-200ms Response**: Global CDN and caching
 
-## Implementation Approach
+## Implementation Phases
 ### Phase 1: Foundation
-- Google Cloud setup with Firestore and Cloud Functions
-- Transformer-based sentiment analysis for Spanish content
-- LangBiTe bias detection methodology
-- Basic web dashboard deployed on GitHub Pages
+- Google Cloud infrastructure setup
+- Spanish sentiment analysis implementation
+- Bias detection methodology
+- Basic web dashboard
 
-### Phase 2: Enhancement  
-- Advanced MCP servers for Google Cloud services
-- Real-time social media monitoring with Memorystore Redis
-- Mobile application with React Native
-- Performance optimization with BigQuery analytics
-- Community features and contribution tools
+### Phase 2: Enhancement
+- Advanced MCP server integration
+- Real-time social media monitoring
+- Mobile application development
+- Performance optimization
+- Community features
 
-## Testing & Quality Assurance
-- **AI Model Testing**: Automated accuracy testing for sentiment and bias detection
-- **Google Cloud Integration Tests**: Comprehensive testing of Firestore, Cloud Functions
-- **Performance Benchmarks**: Response time and accuracy monitoring with Cloud Monitoring
-- **End-to-End Testing**: Full pipeline testing from scraping to analysis
+## Quality Assurance
+- **AI Model Testing**: Accuracy validation
+- **Cloud Integration**: Comprehensive testing
+- **Performance Benchmarks**: Response time monitoring
+- **End-to-End Testing**: Full pipeline validation
 
-## Community & Open Source
-- **GitHub Integration**: Full repository management with MCP GitHub server
-- **CodeRabbit Reviews**: Automated code review and quality analysis
-- **Contributor Onboarding**: Clear guidelines and easy setup with UV
-- **Documentation**: Comprehensive guides in docs/ folder
-- **Issue Tracking**: GitHub issues for bug reports and feature requests
+## Community & Collaboration
+- **GitHub Integration**: Full repository management
+- **Automated Reviews**: Code quality analysis
+- **Contributor Support**: Clear onboarding process
+- **Documentation**: Comprehensive guides
+- **Issue Tracking**: Organized bug reports and features
 
-## Cost-Effective Google Cloud Strategy
-- **Firestore**: 1GB storage, 50,000 reads, 20,000 writes per day (free)
-- **Cloud Functions**: 2M invocations per month (free)
-- **BigQuery**: 1TB queries per month (free), 10GB storage (free)
-- **GitHub Pages**: Free static hosting for frontend
-- **Memorystore**: Basic tier for development, scale as needed
+## Cost-Effective Strategy
+- **Firestore**: Generous free tier for document storage
+- **Cloud Functions**: Serverless execution model
+- **BigQuery**: Free analytics tier
+- **GitHub Pages**: Free static hosting
+- **Memorystore**: Scalable caching solution
 
-## Revolutionary Impact
+## Impact & Innovation
 This project represents a **paradigm shift** in news analysis through:
-- **First-of-its-kind** Google Cloud serverless news monitoring
-- **State-of-the-art** bias detection using LangBiTe methodology  
-- **World-class** sentiment analysis with 84%+ accuracy
-- **Open-source** approach making advanced AI accessible to all
-- **Democratic** focus on media literacy and informed citizenship
+- **Serverless Architecture**: First-of-its-kind implementation
+- **Advanced Bias Detection**: State-of-the-art methodology
+- **High-Accuracy Analysis**: 84%+ Spanish sentiment accuracy
+- **Open-Source Approach**: Democratizing AI tools
+- **Democratic Focus**: Media literacy and informed citizenship
 
-The system will serve as a **reference implementation** for serverless AI-powered news analysis, demonstrating how modern tools like Google Cloud, MCP, transformer models, and LangBiTe can create previously impossible capabilities for understanding media landscape and bias patterns.
-
-
-The system will serve as a **reference implementation** for AI-powered news analysis, demonstrating how modern tools like MCP, transformer models, and LangBiTe can create previously impossible capabilities for understanding media landscape and bias patterns.
+The system serves as a **reference implementation** for serverless AI-powered news analysis, demonstrating how modern cloud tools and AI can create advanced media understanding capabilities.
