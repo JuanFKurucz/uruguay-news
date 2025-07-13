@@ -1,0 +1,155 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+.nyc_output
+
+# Production builds
+build/
+dist/
+out/
+
+# Next.js
+.next/
+.vercel/
+
+# Nuxt.js
+.nuxt/
+.output/
+
+# Gatsby
+.cache/
+public/
+
+# Storybook
+storybook-static/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Package manager lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# parcel-bundler cache (https://parceljs.org/)
+.parcel-cache/
+
+# Rollup cache
+.rollup.cache/
+
+# Webpack cache
+.webpack/
+
+# Vite cache
+.vite/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Serverless directories
+.serverless/
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# TernJS port file
+.tern-port
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+# Temporary folders
+tmp/
+temp/
+
+# Editor directories and files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Mobile development
+ios/
+android/
+.expo/
+.expo-shared/
+
+# React Native
+metro.config.js
+.buckconfig
+.watchmanconfig
+.flowconfig
+
+# Capacitor
+.capacitor/
+capacitor.config.json
+
+# Cordova
+platforms/
+plugins/
+www/ 

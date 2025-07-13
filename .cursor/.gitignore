@@ -1,0 +1,32 @@
+# MCP Environment Files (CRITICAL - Contains API Keys)
+mcp.env
+*.env
+*.env.local
+*.env.production
+*.env.staging
+
+# Cursor AI cache
+.cursor-cache/
+.cursor-logs/
+
+# AI model cache
+.ai-cache/
+.model-cache/
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+.temp/
+
+# Logs
+*.log
+logs/
+
+# Backup files
+*.bak
+*.backup
+
+# OS
+.DS_Store
+Thumbs.db 
