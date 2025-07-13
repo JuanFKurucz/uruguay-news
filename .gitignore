@@ -59,6 +59,7 @@ logs/
 *.pem
 *.p12
 *.pfx
+credentials/
 
 # Google Cloud
 .gcloudignore

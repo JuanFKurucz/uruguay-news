@@ -1,262 +1,260 @@
 # Quick Start Guide
 
-Get the Uruguay News Analysis System running in minutes! This guide assumes you've completed the [installation](installation.md).
+Get the Uruguay News Analysis System running in 5 minutes.
 
-## 🚀 Run Your First Analysis
+## Prerequisites
 
-### 1. Start the Backend Services
+- **Python 3.11+** with UV package manager
+- **Node.js 18+** with npm
+- **Google Cloud SDK** (optional, for deployment)
+
+## 1. Clone and Setup
 
 ```bash
-# Terminal 1: Start Firestore emulator
-gcloud beta emulators firestore start --host-port=localhost:8080
-
-# Terminal 2: Start the backend
-cd backend
-uv run functions-framework --target=analyze_sentiment --debug
+git clone https://github.com/JuanFKurucz/uruguay-news.git
+cd uruguay-news
 ```
 
-### 2. Start the Frontend
+!!! info "Google Cloud Credentials"
+    The project requires Google Cloud credentials for Firestore and other services. Place your service account key file in the `credentials/` directory and set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to point to it (see [Configuration Guide](configuration.md) for details).
+
+## 2. Start Services
+
+### Firestore Emulator (Terminal 1)
 
 ```bash
-# Terminal 3: Start the frontend
+gcloud emulators firestore start --host-port=localhost:8080
+export FIRESTORE_EMULATOR_HOST=localhost:8080
+```
+
+### Backend (Terminal 2)
+
+```bash
+cd backend
+uv sync --extra dev
+uv run python -m functions_framework --target=main --port=8081
+```
+
+### Frontend (Terminal 3)
+
+```bash
 cd frontend/web
+npm install
 npm start
 ```
 
-### 3. Test the System
+The application will be available at:
+- **Frontend**: <http://localhost:3000>
+- **Backend API**: <http://localhost:8081>
+- **Firestore Emulator**: <http://localhost:8080>
 
-Open your browser and navigate to:
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:8080
-
-## 🧪 Run a Sample Analysis
+## 3. Test the System
 
 ### Analyze a News Article
 
 ```bash
-curl -X POST http://localhost:8080/analyze \
+curl -X POST http://localhost:8081/analyze \
   -H "Content-Type: application/json" \
   -d '{
-    "text": "El presidente anunció nuevas medidas económicas que beneficiarán a las familias uruguayas.",
-    "source": "test",
-    "language": "es"
+    "url": "https://www.elpais.com.uy/informacion/politica/elecciones-2024",
+    "content": "El gobierno anunció nuevas medidas económicas para impulsar el crecimiento.",
+    "source": "El País"
   }'
 ```
 
-Expected response:
+### Expected Response
+
 ```json
 {
-  "sentiment": {
-    "label": "POSITIVE",
-    "score": 0.8234,
-    "confidence": 0.9156
-  },
-  "bias": {
-    "political": "NEUTRAL",
-    "confidence": 0.7892
-  },
-  "entities": [
-    {
-      "text": "presidente",
-      "type": "PERSON",
-      "confidence": 0.9234
-    }
-  ]
+  "status": "success",
+  "analysis": {
+    "sentiment": {
+      "overall": "positive",
+      "confidence": 0.85,
+      "scores": {
+        "positive": 0.7,
+        "neutral": 0.2,
+        "negative": 0.1
+      }
+    },
+    "bias": {
+      "score": 0.2,
+      "type": "slight_positive",
+      "confidence": 0.75
+    },
+    "entities": [
+      {"text": "gobierno", "type": "ORG", "confidence": 0.9}
+    ]
+  }
 }
 ```
 
-### Analyze Multiple Sources
+### Batch Analysis
 
 ```bash
-curl -X POST http://localhost:8080/batch-analyze \
+curl -X POST http://localhost:8081/batch-analyze \
   -H "Content-Type: application/json" \
   -d '{
     "articles": [
       {
-        "text": "La economía uruguaya muestra signos de recuperación.",
-        "source": "el_pais"
-      },
-      {
-        "text": "Preocupación por el aumento del desempleo en el país.",
-        "source": "la_diaria"
+        "url": "https://www.montevideo.com.uy/contenido/Politica",
+        "content": "La oposición critica las nuevas políticas económicas.",
+        "source": "Montevideo Portal"
       }
     ]
   }'
 ```
 
-## 📊 View Results in Dashboard
+## 4. Access the Dashboard
 
-1. Open http://localhost:3000
-2. Navigate to **Analysis Dashboard**
-3. View real-time sentiment trends
-4. Explore bias detection results
-5. Check entity recognition
+1. Open <http://localhost:3000>
+2. Navigate to the **Dashboard** tab
+3. View real-time analytics:
+   - Sentiment trends
+   - Bias detection results
+   - News source analysis
+   - Entity recognition
 
-## 🔧 Development Workflow
+## 5. Monitor System Health
 
-### Make Changes
-
-1. **Backend Changes**:
-   ```bash
-   # Edit files in backend/
-   # Functions Framework auto-reloads
-   ```
-
-2. **Frontend Changes**:
-   ```bash
-   # Edit files in frontend/web/src/
-   # React dev server auto-reloads
-   ```
-
-### Run Tests
+### Health Check
 
 ```bash
-# Backend tests
-cd backend
-uv run pytest tests/
-
-# Frontend tests
-cd frontend/web
-npm test
+curl http://localhost:8081/health
 ```
 
-### Check Code Quality
+### System Metrics
 
 ```bash
-# Python linting
-cd backend
-uv run ruff check .
-uv run mypy .
-
-# JavaScript linting
-cd frontend/web
-npm run lint
+curl http://localhost:8081/metrics
 ```
 
-## 🌐 Test with Real News Sources
+## Development Workflow
 
-### Scrape Live Content
+### Add New News Sources
+
+1. **Configure scraper** in `backend/src/scrapers/`
+2. **Add source metadata** to configuration
+3. **Test extraction** with sample URLs
+4. **Deploy** to staging environment
+
+### Scrape News Content
 
 ```bash
-# Scrape from El País
-curl -X POST http://localhost:8080/scrape \
+curl -X POST http://localhost:8081/scrape \
   -H "Content-Type: application/json" \
   -d '{
-    "url": "https://www.elpais.com.uy/informacion/politica",
-    "source": "el_pais"
+    "source": "elpais",
+    "category": "politica",
+    "limit": 10
   }'
 ```
 
-### Monitor Social Media
+### Monitor Real-time Analysis
 
 ```bash
-# Monitor Twitter trends
-curl -X POST http://localhost:8080/monitor \
+curl -X POST http://localhost:8081/monitor \
   -H "Content-Type: application/json" \
   -d '{
-    "platform": "twitter",
-    "keywords": ["Uruguay", "política", "economía"]
+    "sources": ["elpais", "montevideo", "ladiaria"],
+    "keywords": ["elecciones", "política", "economía"]
   }'
 ```
 
-## 📈 Performance Monitoring
+## API Endpoints
 
-### Check System Health
+### Core Analysis
+
+- `GET /health` - System health check
+- `GET /metrics` - Performance metrics
+- `POST /analyze` - Single article analysis
+- `POST /batch-analyze` - Multiple articles
+
+### Metrics Endpoints
+
+- `GET /metrics/sentiment` - Sentiment analysis metrics
+- `GET /metrics/bias` - Bias detection metrics
+- `GET /metrics/sources` - News source statistics
+
+### Data Collection
+
+- `POST /scrape` - Manual content scraping
+- `GET /sources` - Available news sources
+- `POST /monitor` - Start real-time monitoring
+
+## Troubleshooting
+
+### Port Conflicts
+
+If you encounter port conflicts:
 
 ```bash
-# Health check
-curl http://localhost:8080/health
-
-# Metrics
-curl http://localhost:8080/metrics
-```
-
-### Monitor AI Performance
-
-```bash
-# Sentiment analysis accuracy
-curl http://localhost:8080/metrics/sentiment
-
-# Bias detection performance
-curl http://localhost:8080/metrics/bias
-```
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-#### Backend Not Starting
-```bash
-# Check if port is in use
+# Check what's using the ports
+netstat -tulpn | grep :3000
 netstat -tulpn | grep :8080
+netstat -tulpn | grep :8081
 
-# Kill existing process
-kill -9 $(lsof -ti:8080)
+# Kill processes if needed
+lsof -ti:3000 | xargs kill -9
+lsof -ti:8080 | xargs kill -9
+lsof -ti:8081 | xargs kill -9
 ```
 
-#### Frontend Build Errors
-```bash
-# Clear cache
-cd frontend/web
-rm -rf node_modules
-npm install
-```
+### Firestore Connection Issues
 
-#### Firestore Connection Issues
-```bash
-# Check emulator status
-gcloud beta emulators firestore env-init
+1. **Start Firestore emulator**:
+   ```bash
+   gcloud emulators firestore start --host-port=localhost:8080
+   ```
 
-# Restart emulator
-gcloud beta emulators firestore start --host-port=localhost:8080
-```
+2. **Set environment variable**:
+   ```bash
+   export FIRESTORE_EMULATOR_HOST=localhost:8080
+   ```
 
-### Performance Issues
+### Common Errors
 
-#### Slow Analysis
-- Check if models are cached
-- Verify GPU acceleration (if available)
-- Monitor memory usage
+- **Port 8081 in use**: Stop other processes or change port
+- **Missing dependencies**: Run `uv sync --extra dev` in backend
+- **Node modules**: Delete `node_modules` and run `npm install`
+- **Firestore timeout**: Ensure emulator is running
 
-#### High Memory Usage
-```bash
-# Monitor resources
-top -p $(pgrep -f "functions-framework")
-```
+## Next Steps
 
-## 🚀 Deploy to Production
+1. **[Configuration Guide](configuration.md)** - Set up Google Cloud services
+2. **[Development Setup](../development/setup.md)** - Full development environment
+3. **[API Documentation](../api/rest.md)** - Complete API reference
+4. **[Contributing](../community/contributing.md)** - Join the community
 
-### Deploy Backend to Google Cloud
+## Production Deployment
+
+### Quick Deploy
 
 ```bash
-cd backend
-gcloud functions deploy analyze-sentiment \
+# Deploy backend to Google Cloud Functions
+gcloud functions deploy uruguay-news-api \
   --runtime python311 \
   --trigger-http \
+  --entry-point main \
+  --source backend/ \
   --allow-unauthenticated
-```
 
-### Deploy Frontend to GitHub Pages
-
-```bash
+# Deploy frontend to GitHub Pages
 cd frontend/web
 npm run build
 npm run deploy
 ```
 
-## 📚 Next Steps
+### Environment Variables
 
-Now that you have the system running:
+```bash
+# Production API endpoint
+export REACT_APP_API_URL=https://us-central1-your-project.cloudfunctions.net/uruguay-news-api
 
-1. **[Architecture](../architecture/overview.md)** - Understand the system design
-2. **[Development](../development/setup.md)** - Set up your development environment
-3. **[API Reference](../api/rest.md)** - Explore the API endpoints
-4. **[AI Models](../ai/sentiment.md)** - Learn about our AI models
+# Google Cloud project
+export GOOGLE_CLOUD_PROJECT=your-project-id
+```
 
-## 🤝 Get Involved
+---
 
-- **Report Issues**: Found a bug? [Create an issue](https://github.com/JuanFKurucz/uruguay-news/issues)
-- **Contribute**: [Contributing Guide](../community/contributing.md)
-- **Discuss**: Join our community discussions
-
-Happy analyzing! 🇺🇾✨ 
+**Need Help?** Join our [community discussions](https://github.com/JuanFKurucz/uruguay-news/discussions) or check the [development setup guide](../development/setup.md). 

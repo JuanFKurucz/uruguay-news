@@ -1,5 +1,11 @@
 import React from 'react';
 
+/**
+ * About page component displaying platform information, mission, and features.
+ * Provides users with context about the Uruguay News analysis platform.
+ *
+ * @returns {JSX.Element} The About page component
+ */
 const About: React.FC = () => {
   return (
     <div className="space-y-6">

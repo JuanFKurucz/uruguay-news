@@ -83,38 +83,38 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Getting Started:
-    - Overview: getting-started/overview.md
-    - Installation: getting-started/installation.md
-    - Configuration: getting-started/configuration.md
-    - Quick Start: getting-started/quick-start.md
+      - Overview: getting-started/overview.md
+      - Installation: getting-started/installation.md
+      - Configuration: getting-started/configuration.md
+      - Quick Start: getting-started/quick-start.md
   - Architecture:
-    - System Overview: architecture/overview.md
-    - Google Cloud Services: architecture/google-cloud.md
-    - AI Pipeline: architecture/ai-pipeline.md
-    - Data Flow: architecture/data-flow.md
+      - System Overview: architecture/overview.md
+      - Google Cloud Services: architecture/google-cloud.md
+      - AI Pipeline: architecture/ai-pipeline.md
+      - Data Flow: architecture/data-flow.md
   - Development:
-    - Setup: development/setup.md
-    - Guidelines: development/guidelines.md
-    - Testing: development/testing.md
-    - Deployment: development/deployment.md
+      - Setup: development/setup.md
+      - Guidelines: development/guidelines.md
+      - Testing: development/testing.md
+      - Deployment: development/deployment.md
   - API Reference:
-    - REST API: api/rest.md
-    - GraphQL: api/graphql.md
-    - WebSocket: api/websocket.md
+      - REST API: api/rest.md
+      - GraphQL: api/graphql.md
+      - WebSocket: api/websocket.md
   - AI Models:
-    - Sentiment Analysis: ai/sentiment.md
-    - Bias Detection: ai/bias.md
-    - Entity Recognition: ai/entities.md
-    - Performance: ai/performance.md
+      - Sentiment Analysis: ai/sentiment.md
+      - Bias Detection: ai/bias.md
+      - Entity Recognition: ai/entities.md
+      - Performance: ai/performance.md
   - News Sources:
-    - Uruguayan Media: sources/uruguayan-media.md
-    - Social Media: sources/social-media.md
-    - Data Collection: sources/data-collection.md
+      - Uruguayan Media: sources/uruguayan-media.md
+      - Social Media: sources/social-media.md
+      - Data Collection: sources/data-collection.md
   - Community:
-    - Contributing: community/contributing.md
-    - Code of Conduct: community/code-of-conduct.md
-    - Roadmap: community/roadmap.md
-    - Changelog: community/changelog.md
+      - Contributing: community/contributing.md
+      - Code of Conduct: community/code-of-conduct.md
+      - Roadmap: community/roadmap.md
+      - Changelog: community/changelog.md
 
 # Extra
 extra:
@@ -127,4 +127,4 @@ extra:
     provider: google
     property: G-XXXXXXXXXX
   version:
-    provider: mike 
+    provider: mike

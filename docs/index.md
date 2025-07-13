@@ -287,7 +287,7 @@ We welcome contributions from developers, journalists, researchers, and citizens
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/JuanFKurucz/uruguay-news/blob/main/LICENSE) file for details.
 
 ## 🎖️ Recognition
 

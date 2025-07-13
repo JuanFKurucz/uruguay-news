@@ -1,117 +1,184 @@
-name: Deploy to Google Cloud and GitHub Pages
+name: Deploy to Google Cloud Functions and GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - 'frontend/**'
+      - '.github/workflows/deploy.yml'
   pull_request:
-    branches: [ main ]
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - 'frontend/**'
+      - '.github/workflows/deploy.yml'
+
+env:
+  GOOGLE_CLOUD_PROJECT: ${{ secrets.GOOGLE_CLOUD_PROJECT }}
+  GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
 
 jobs:
-  # Backend deployment to Google Cloud Functions
+  test-backend:
+    name: Test Backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install UV
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        working-directory: ./backend
+        run: |
+          uv sync --extra dev
+
+      - name: Run linting
+        working-directory: ./backend
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+
+      - name: Run YAML linting
+        working-directory: ./backend
+        run: |
+          uv run yamllint ../.github/workflows/ ../mkdocs.yml
+
+      - name: Run type checking
+        working-directory: ./backend
+        run: |
+          uv run mypy .
+
+      - name: Run tests
+        working-directory: ./backend
+        run: |
+          uv run pytest tests/ -v --cov=src/uruguay_news --cov-report=xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./backend/coverage.xml
+          flags: backend
+          name: backend-coverage
+
+  test-frontend:
+    name: Test Frontend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+          cache-dependency-path: "./frontend/web/package-lock.json"
+
+      - name: Install dependencies
+        working-directory: ./frontend/web
+        run: npm ci
+
+      - name: Run linting
+        working-directory: ./frontend/web
+        run: npm run lint
+
+      - name: Run type checking
+        working-directory: ./frontend/web
+        run: npm run type-check
+
+      - name: Run tests
+        working-directory: ./frontend/web
+        run: npm test -- --coverage --watchAll=false
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./frontend/web/coverage/lcov.info
+          flags: frontend
+          name: frontend-coverage
+
   deploy-backend:
+    name: Deploy Backend to Cloud Functions
+    needs: test-backend
     runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.modified, 'backend/') || github.event_name == 'workflow_dispatch'
-    
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-    
-    - name: Install UV
-      run: curl -LsSf https://astral.sh/uv/install.sh | sh
-    
-    - name: Install dependencies with UV
-      run: |
-        cd backend
-        uv sync
-    
-    - name: Run tests
-      run: |
-        cd backend
-        uv run pytest
-    
-    - name: Setup Google Cloud SDK
-      uses: google-github-actions/setup-gcloud@v1
-      with:
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        project_id: ${{ secrets.GCP_PROJECT_ID }}
-    
-    - name: Generate requirements.txt for Cloud Functions
-      run: |
-        cd backend
-        uv export --format requirements-txt --output-file requirements.txt
-    
-    - name: Deploy to Cloud Functions
-      run: |
-        cd backend
-        gcloud functions deploy uruguay-news-api \
-          --runtime python311 \
-          --trigger-http \
-          --entry-point main \
-          --source . \
-          --allow-unauthenticated
+    if: github.ref == 'refs/heads/main'
 
-  # Frontend deployment to GitHub Pages
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Deploy to Cloud Functions
+        working-directory: ./backend
+        run: |
+          gcloud functions deploy uruguay-news-api \
+            --gen2 \
+            --runtime=python311 \
+            --region=us-central1 \
+            --source=. \
+            --entry-point=main \
+            --trigger-http \
+            --allow-unauthenticated \
+            --memory=512MB \
+            --timeout=60s \
+            --set-env-vars="ENVIRONMENT=production"
+
   deploy-frontend:
+    name: Deploy Frontend to GitHub Pages
+    needs: test-frontend
     runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.modified, 'frontend/') || github.event_name == 'workflow_dispatch'
-    
+    if: github.ref == 'refs/heads/main'
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-        cache-dependency-path: frontend/web/package-lock.json
-    
-    - name: Install dependencies
-      run: |
-        cd frontend/web
-        npm ci
-    
-    - name: Build React app
-      run: |
-        cd frontend/web
-        npm run build
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./frontend/web/build
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+          cache-dependency-path: "./frontend/web/package-lock.json"
 
-  # Documentation deployment
-  deploy-docs:
-    runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.modified, 'docs/') || github.event_name == 'workflow_dispatch'
-    
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-    
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-    
-    - name: Install UV
-      run: curl -LsSf https://astral.sh/uv/install.sh | sh
-    
-    - name: Install documentation dependencies with UV
-      run: uv sync --extra docs
-    
-    - name: Build documentation
-      run: uv run mkdocs build
+      - name: Install dependencies
+        working-directory: ./frontend/web
+        run: npm ci
 
-    - name: Deploy documentation to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./site
-        destination_dir: docs 
+      - name: Build application
+        working-directory: ./frontend/web
+        run: npm run build
+        env:
+          REACT_APP_API_URL: https://us-central1-${{ secrets.GOOGLE_CLOUD_PROJECT }}.cloudfunctions.net/uruguay-news-api
+          REACT_APP_ENVIRONMENT: production
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./frontend/web/build
+          cname: uruguay-news.your-domain.com
+
+

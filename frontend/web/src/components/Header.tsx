@@ -2,6 +2,12 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
+/**
+ * Responsive navigation header component with mobile menu support.
+ * Provides navigation links and highlights the current active route.
+ *
+ * @returns {JSX.Element} Header component with navigation menu
+ */
 const Header: React.FC = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -49,6 +55,8 @@ const Header: React.FC = () => {
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isMenuOpen}
               className="text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               {isMenuOpen ? (

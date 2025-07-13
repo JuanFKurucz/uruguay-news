@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 // Components
 import Header from './components/Header';
@@ -23,6 +23,12 @@ const queryClient = new QueryClient({
   },
 });
 
+/**
+ * Main application component that sets up routing and data fetching.
+ * Configures React Query for API data management and defines the main routes.
+ * 
+ * @returns {JSX.Element} The root App component with routing and query providers
+ */
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
