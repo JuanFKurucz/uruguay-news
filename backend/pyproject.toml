@@ -1,0 +1,293 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "uruguay-news"
+version = "0.1.0"
+description = "AI-powered news analysis platform for Uruguay"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+
+# ================================================================
+# DEPLOYMENT STRATEGY FOR CLOUD FUNCTIONS
+# ================================================================
+#
+# This project uses a three-tier AI deployment strategy:
+#
+# 1. CLOUD FUNCTIONS (Production):
+#    - Install with: pip install -e ".[ai-cloud]"
+#    - API-only (OpenAI, Google Cloud AI services)
+#    - Ultra-lightweight, <100MB deployment
+#    - Sub-second cold-start times
+#
+# 2. LOCAL DEVELOPMENT (Lightweight):
+#    - Install with: pip install -e ".[ai-light]"
+#    - Lightweight inference (sentence-transformers, onnxruntime)
+#    - Local testing without heavy models
+#    - Reasonable development performance
+#
+# 3. LOCAL DEVELOPMENT (Full):
+#    - Install with: pip install -e ".[ai-full]"
+#    - Full PyTorch/Transformers stack for training
+#    - Model experimentation and fine-tuning
+#    - Research and development environment
+#
+# 4. VERTEX AI (Heavy Inference):
+#    - Custom model endpoints for large language models
+#    - Batch processing for expensive operations
+#    - Auto-scaling inference infrastructure
+#
+# INSTALLATION EXAMPLES:
+#
+# Cloud Functions deployment:
+#   pip install -e ".[cloud]"
+#
+# Local development with lightweight AI:
+#   pip install -e ".[light]"
+#
+# Full local development:
+#   pip install -e ".[local]"
+#
+# Custom combinations:
+#   pip install -e ".[dev,ai-cloud]"
+#
+# ================================================================
+authors = [
+    { name = "Uruguay News Community", email = "contact@uruguay-news.uy" },
+]
+keywords = ["news", "ai", "analysis", "uruguay", "sentiment", "bias"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content :: News/Diary",
+]
+
+dependencies = [
+    # Core Cloud Functions dependencies
+    "fastapi>=0.104.0",
+    "functions-framework>=3.5.0",
+    "google-cloud-firestore>=2.13.0",
+    "google-cloud-logging>=3.8.0",
+    "uvicorn[standard]>=0.24.0",
+    "pydantic>=2.5.0",
+    "pydantic-settings>=2.1.0",
+    
+    # Lightweight utilities
+    "redis>=5.0.0",
+    "requests>=2.31.0",
+    "python-multipart>=0.0.6",
+    "python-dotenv>=1.0.0",
+    "httpx>=0.25.0",
+    
+    # Lightweight content processing
+    "beautifulsoup4>=4.12.0",
+    "feedparser>=6.0.0",
+    "python-dateutil>=2.8.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-asyncio>=0.21.0",
+    "httpx>=0.25.0",
+    "mypy>=1.7.0",
+    "ruff>=0.1.0",
+    "black>=23.11.0",
+    "isort>=5.12.0",
+    "yamllint>=1.32.0",
+    "pre-commit>=3.5.0",
+]
+docs = [
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.0.0",
+    "mkdocs-git-revision-date-localized-plugin>=1.2.0",
+    "mkdocs-minify-plugin>=0.7.0",
+    "pymdown-extensions>=10.0.0",
+]
+# Cloud Functions optimized AI dependencies (API-only, ultra-lightweight)
+ai-cloud = [
+    "openai>=1.3.0",                    # OpenAI API client (lightweight)
+    "google-cloud-aiplatform>=1.38.0",  # Vertex AI for heavy inference
+    "google-cloud-translate>=3.12.0",   # Google Translate API
+    "google-cloud-language>=2.11.0",    # Natural Language API
+    "tiktoken>=0.5.0",                  # Token counting for LLMs
+    "regex>=2022.1.18",                 # Text processing utilities
+]
+
+# Lightweight inference (for local development without heavy models)
+ai-light = [
+    "openai>=1.3.0",
+    "google-cloud-aiplatform>=1.38.0",
+    "google-cloud-translate>=3.12.0",
+    "google-cloud-language>=2.11.0",
+    "tiktoken>=0.5.0",
+    "regex>=2022.1.18",
+    "sentence-transformers>=2.2.0",     # Lightweight sentence embeddings
+    "onnxruntime>=1.16.0",              # Lightweight inference runtime
+    "numpy>=1.24.0",                    # Essential numerical computing
+]
+
+# Full AI dependencies for local development and training
+ai-full = [
+    "openai>=1.3.0",
+    "langchain>=0.0.340",
+    "transformers>=4.35.0",             # ⚠️ Large: Use only for local development
+    "torch>=2.1.0",                     # ⚠️ Large: Use only for local development
+    "numpy>=1.24.0",
+    "scikit-learn>=1.3.0",
+    "sentence-transformers>=2.2.0",
+    "onnxruntime>=1.16.0",
+    "google-cloud-aiplatform>=1.38.0",
+    "google-cloud-translate>=3.12.0",
+    "google-cloud-language>=2.11.0",
+    "tiktoken>=0.5.0",
+    "regex>=2022.1.18",
+]
+
+# Legacy alias for backward compatibility
+ai = [
+    "uruguay-news[ai-cloud]",
+]
+# Different deployment profiles
+cloud = [
+    "uruguay-news[ai-cloud]",           # Cloud Functions optimized (API-only)
+]
+light = [
+    "uruguay-news[ai-light]",           # Lightweight inference for local dev
+]
+local = [
+    "uruguay-news[dev,docs,ai-full]",   # Local development with full AI
+]
+all = [
+    "uruguay-news[dev,docs,ai-full]",   # All features for development
+]
+
+[project.urls]
+Homepage = "https://github.com/JuanFKurucz/uruguay-news"
+Documentation = "https://juanfkurucz.github.io/uruguay-news/"
+Repository = "https://github.com/JuanFKurucz/uruguay-news.git"
+Issues = "https://github.com/JuanFKurucz/uruguay-news/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/uruguay_news"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+    "/tests",
+    "/docs",
+    "README.md",
+    "LICENSE",
+    "pyproject.toml",
+]
+
+# Ruff configuration
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+    "N",   # pep8-naming
+    "S",   # flake8-bandit
+    "T20", # flake8-print
+    "SIM", # flake8-simplify
+    "TCH", # flake8-type-checking
+]
+ignore = [
+    "S101",  # Use of assert
+    "S104",  # Possible binding to all interfaces
+    "T201",  # Print found
+]
+
+[tool.ruff.per-file-ignores]
+"tests/**/*" = ["S101", "S105", "S106"]
+"src/uruguay_news/__init__.py" = ["F401"]
+
+[tool.ruff.isort]
+known-first-party = ["uruguay_news"]
+
+# MyPy configuration
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "google.cloud.*",
+    "functions_framework.*",
+    "redis.*",
+]
+ignore_missing_imports = true
+
+# Pytest configuration
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--verbose",
+    "--tb=short",
+    "--cov=src/uruguay_news",
+    "--cov-report=term-missing",
+    "--cov-report=xml",
+    "--cov-report=html",
+    "--cov-fail-under=80",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
+
+# Coverage configuration
+[tool.coverage.run]
+source = ["src/uruguay_news"]
+omit = [
+    "*/tests/*",
+    "*/venv/*",
+    "*/.venv/*",
+    "*/site-packages/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+] 

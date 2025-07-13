@@ -1,0 +1,130 @@
+site_name: Uruguay News Analysis System
+site_description: Open-source AI-powered news analysis platform for Uruguay
+site_author: Uruguay News Community
+site_url: https://juanfkurucz.github.io/uruguay-news/
+
+# Repository
+repo_name: JuanFKurucz/uruguay-news
+repo_url: https://github.com/JuanFKurucz/uruguay-news
+edit_uri: edit/main/docs/
+
+# Copyright
+copyright: Copyright &copy; 2025 Uruguay News Community - MIT License
+
+# Configuration
+theme:
+  name: material
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - search.highlight
+    - search.share
+    - toc.follow
+    - content.code.copy
+    - content.action.edit
+    - content.action.view
+  icon:
+    repo: fontawesome/brands/github
+    edit: material/pencil
+    view: material/eye
+
+# Plugins
+plugins:
+  - search:
+      lang: en
+  - git-revision-date-localized:
+      enable_creation_date: true
+  - minify:
+      minify_html: true
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - attr_list
+  - def_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+# Navigation
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Overview: getting-started/overview.md
+      - Installation: getting-started/installation.md
+      - Configuration: getting-started/configuration.md
+      - Quick Start: getting-started/quick-start.md
+  - Architecture:
+      - System Overview: architecture/overview.md
+      - Google Cloud Services: architecture/google-cloud.md
+      - AI Pipeline: architecture/ai-pipeline.md
+      - Data Flow: architecture/data-flow.md
+  - Development:
+      - Setup: development/setup.md
+      - Guidelines: development/guidelines.md
+      - Testing: development/testing.md
+      - Deployment: development/deployment.md
+  - API Reference:
+      - REST API: api/rest.md
+      - GraphQL: api/graphql.md
+      - WebSocket: api/websocket.md
+  - AI Models:
+      - Sentiment Analysis: ai/sentiment.md
+      - Bias Detection: ai/bias.md
+      - Entity Recognition: ai/entities.md
+      - Performance: ai/performance.md
+  - News Sources:
+      - Uruguayan Media: sources/uruguayan-media.md
+      - Social Media: sources/social-media.md
+      - Data Collection: sources/data-collection.md
+  - Community:
+      - Contributing: community/contributing.md
+      - Code of Conduct: community/code-of-conduct.md
+      - Roadmap: community/roadmap.md
+      - Changelog: community/changelog.md
+
+# Extra
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/JuanFKurucz/uruguay-news
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/uruguaynews
+  analytics:
+    provider: google
+    property: G-XXXXXXXXXX
+  version:
+    provider: mike

@@ -1,0 +1,44 @@
+# MkDocs
+site/
+.mkdocs_cache/
+
+# Sphinx documentation
+_build/
+_static/
+_templates/
+
+# Jupyter Book
+_build/
+.jupyter_cache/
+
+# GitBook
+_book/
+
+# VuePress
+.vuepress/dist/
+
+# Docusaurus
+.docusaurus/
+build/
+
+# Generated files
+*.pdf
+*.epub
+*.mobi
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+.temp/
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db 

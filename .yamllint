@@ -1,0 +1,35 @@
+# YAMLlint configuration for Uruguay News project
+extends: default
+
+rules:
+  # Allow longer lines for readability in some contexts
+  line-length:
+    max: 120
+    level: warning
+
+  # Allow empty lines at the beginning/end of files
+  empty-lines:
+    max-start: 0
+    max-end: 2
+
+  # Allow comments to be indented differently
+  comments-indentation: disable
+
+  # Allow truthy values like 'on', 'off', 'yes', 'no'
+  truthy:
+    allowed-values: ['true', 'false', 'on', 'off', 'yes', 'no']
+    check-keys: false
+
+  # Allow quoted strings
+  quoted-strings:
+    quote-type: any
+    required: false
+
+  # Allow document start/end markers
+  document-start: disable
+  document-end: disable
+
+  # Allow different line endings (Windows CRLF vs Unix LF)
+  new-line-at-end-of-file: disable
+  new-lines:
+    type: platform 

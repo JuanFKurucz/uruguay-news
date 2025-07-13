@@ -1,143 +1,21 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
-
-# C extensions
-*.so
-
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-.hypothesis/
-.pytest_cache/
-
-# Translations
-*.mo
-*.pot
-
-# Django stuff:
-local_settings.py
-db.sqlite3
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# IPython
-profile_default/
-ipython_config.py
-
-# pyenv
-.python-version
-
-# celery beat schedule file
-celerybeat-schedule
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
+# Project-level ignores
 .env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
+.env.local
+.env.development
+.env.test
+.env.production
 
-# Spyder project settings
-.spyderproject
-.spyproject
+# UV lock file (keep this at root level)
+uv.lock
 
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
-
-# Node.js
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-
-# Next.js
-.next/
-out/
-
-# React
-build/
-
-# Logs
-*.log
-logs/
-
-# IDE files
+# IDE and editors
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
 
-# MacOS
+# OS files
 .DS_Store
 .DS_Store?
 ._*
@@ -145,52 +23,47 @@ logs/
 .Trashes
 ehthumbs.db
 Thumbs.db
-
-# Windows
 *.lnk
 
-# MCP Environment Files (CRITICAL - Contains API Keys)
-.cursor/mcp.env
-*.env.local
-*.env.production
-*.env.staging
+# Logs (project-wide)
+*.log
+logs/
+.logs/
 
-# Google Cloud credentials
-service-account*.json
-*-credentials.json
-
-# AI/ML specific
-models/
-weights/
-checkpoints/
-experiments/
-wandb/
-
-# Data files
-data/
-datasets/
-*.csv
-*.parquet
-*.h5
-*.hdf5
-
-# Temporary files
-temp/
-tmp/
+# Temporary files (project-wide)
 *.tmp
 *.temp
+.tmp/
+.temp/
 
-# Database files
+# Backup files
+*.bak
+*.backup
+*~
+
+# Archive files
+*.zip
+*.tar
+*.tar.gz
+*.rar
+
+# Database files (project-wide)
 *.db
 *.sqlite
 *.sqlite3
 
-# Redis dump
-dump.rdb
+# Secrets and credentials
+*secret*
+*credential*
+*key*.json
+*.pem
+*.p12
+*.pfx
+credentials/
 
-# Firebase
-.firebase/
-firebase-debug.log
+# Google Cloud
+.gcloudignore
+service-account-key.json
 
 # Terraform
 *.tfstate
@@ -198,7 +71,34 @@ firebase-debug.log
 .terraform/
 .terraform.lock.hcl
 
-# Project specific
+# Docker
+.dockerignore
+Dockerfile.prod
+
+# Kubernetes
+*.yaml.bak
+*.yml.bak
+
+# Project-specific data
 scraping_cache/
 news_data/
-analysis_results/ 
+analysis_results/
+exports/
+
+# MCP Environment Files (CRITICAL - Contains API Keys)
+.cursor/mcp.env
+*.env.local
+*.env.production
+*.env.staging
+
+# Test artifacts
+test-results/
+coverage/
+.coverage
+
+# Documentation build (handled by docs/.gitignore)
+/site
+
+# Monitoring and observability
+.grafana/
+.prometheus/ 
